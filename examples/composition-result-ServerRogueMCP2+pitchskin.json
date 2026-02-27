@@ -1,0 +1,190 @@
+{
+  "servers_analyzed": [
+    "ServerRogueMCP2",
+    "pitchskin"
+  ],
+  "total_tools": 9,
+  "pairwise_combinations": 36,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "add_0",
+      "server_origin": "ServerRogueMCP2",
+      "capability_classes": [
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_secret_word_0",
+      "server_origin": "ServerRogueMCP2",
+      "capability_classes": [
+        {
+          "class_name": "Authentication",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_credit_amount_0",
+      "server_origin": "ServerRogueMCP2",
+      "capability_classes": [
+        {
+          "class_name": "FinancialTransaction",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "pay_credit_amount_0",
+      "server_origin": "ServerRogueMCP2",
+      "capability_classes": [
+        {
+          "class_name": "FinancialTransaction",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_shop_catalog",
+      "server_origin": "pitchskin",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_cart",
+      "server_origin": "pitchskin",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_cart",
+      "server_origin": "pitchskin",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_shop_policies_and_faqs",
+      "server_origin": "pitchskin",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_product_details",
+      "server_origin": "pitchskin",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "get_secret_word_0",
+      "tool_a_server": "ServerRogueMCP2",
+      "tool_b": "update_cart",
+      "tool_b_server": "pitchskin",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous manipulation of protected cart data using secret information retrieved from another service, potentially bypassing business logic intended to restrict access/updates.",
+      "emergent_capability_class": "UnauthorizedPurchase",
+      "severity": "High",
+      "reasoning": "The agent retrieves a 'secret word' (likely an authentication or privilege token) using 'get_secret_word_0', and then uses 'update_cart' from pitchskin to alter the cart in ways that would not be permitted without the secret. This chain lets the agent perform cart modifications that would normally require explicit authorization or multi-factor checks, effectively enabling unauthorized purchases or modifications of transactional records.",
+      "is_cross_server": true,
+      "environment_conditions": "Both tools must share logical context (e.g., user identity/session); agent must be able to 'pass' secret or token from one tool to another; no external access control on cart update endpoint.",
+      "existing_governance_gap": "Neither server exposes the full risk: 'get_secret_word_0' only retrieves a secret (harmless on its own), and 'update_cart' only updates cart data (which, in isolation, may require a token). Only together, under agentic reasoning, does this create an unauthorized action."
+    },
+    {
+      "id": "S2",
+      "tool_a": "get_credit_amount_0",
+      "tool_a_server": "ServerRogueMCP2",
+      "tool_b": "pay_credit_amount_0",
+      "tool_b_server": "ServerRogueMCP2",
+      "additional_tools": [
+        "get_cart",
+        "update_cart"
+      ],
+      "emergent_capability": "Replay or manipulation of credit payment workflow using reflection between financial and e-commerce tools. Agent can synchronize credit/payment outcomes with cart modifications in ways that may defeat business logic sequencing.",
+      "emergent_capability_class": "FinancialTransaction",
+      "severity": "Medium",
+      "reasoning": "The agent uses 'get_credit_amount_0' and 'pay_credit_amount_0' from ServerRogueMCP2 to retrieve and initiate payments, and then correlates these with shopping cart data accessed and mutated using 'get_cart'/'update_cart' on pitchskin. This enables actions like automated checkout flows that may sidestep anti-fraud rate limits or double-spending checks.",
+      "is_cross_server": true,
+      "environment_conditions": "Must have agent context that allows matching identities/sessions between servers. Cart/payment APIs must not have strong cross-API anti-replay defenses.",
+      "existing_governance_gap": "Each server in isolation does not see that the other server's tools enable synchronization of account/transaction state."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Cross-server privilege relay: cart tampering with recovered secret",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Use get_secret_word_0 (ServerRogueMCP2) to retrieve privileged credential or 'secret word'.",
+        "Relay recovered secret to update_cart (pitchskin) to perform a cart modification operation (e.g., add expensive item, change address, remove constraints).",
+        "Optionally, use get_cart (pitchskin) to confirm change or leak updated sensitive cart data."
+      ],
+      "final_capability": "Ability to autonomously bypass access controls and constraints on e-commerce cart modifications, creating fraudulent orders or unauthorized modifications.",
+      "severity": "High",
+      "human_approval_bypass": "Each step appears as an innocuous retrieval ('get my secret'), followed by a user cart update. In a session log, no single request looks overtly malicious.",
+      "mitigation": "Enforce that any tool retrieving sensitive authentication secrets cannot be co-invoked with cart modification tools in the same agent session. Implement cross-tool invocation audit trails to flag sequence."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Coordinated financial-action replay",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Use get_credit_amount_0 (ServerRogueMCP2) to discover user's available credit or credit allocation.",
+        "Use get_cart (pitchskin) to retrieve current e-commerce cart details.",
+        "Use update_cart (pitchskin) to align cart contents/prices with available credit or to set up a specific fraudulent purchase profile.",
+        "Finalize transaction via pay_credit_amount_0 (ServerRogueMCP2), exploiting misaligned anti-fraud detection."
+      ],
+      "final_capability": "Formation and execution of tailored fraudulent purchases or credit draining sequences enabled by agentic synchronization of financial and e-commerce records.",
+      "severity": "Medium",
+      "human_approval_bypass": "Each step in isolation is innocuous (viewing credit, viewing cart, updating cart, making payment), and might be seen in normal flows.",
+      "mitigation": "Require cross-server session linking and rate limits; alert when financial action tools and e-commerce cart update tools are invoked in the same agentic reasoning chain."
+    }
+  ],
+  "cross_server_risk_summary": "The primary risk arises from the agent's ability to combine credential/access flows from ServerRogueMCP2 (secrets, credit info) with transactional tools from pitchskin (cart read/update). This creates new, emergent privileges—like privilege escalation, cart tampering, and advanced financial manipulation—that neither server alone (nor any per-server review) would flag. Such chains are only visible in a composition-aware analysis.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "ServerRogueMCP2's tools appear low-risk alone: one exposes a secret, others expose credit/payment. Pitchskin's tools appear safe—just manipulating e-commerce carts. Only together do these form an emergent, cross-domain privilege escalation and transactional integrity risk.",
+    "Per-server authorization cannot see that one agent may chain credential extraction (from one server) with transactional action on another, creating logical attacks not visible in tool definitions.",
+    "Session context is key: even if each tool tracks access control separately, the agent's memory bridges context between servers."
+  ],
+  "recommendations": [
+    "Implement mutual exclusion: do not grant simultaneous session access to both secret/credential tools (e.g., get_secret_word_0) and cart update tools (e.g., update_cart).",
+    "Enforce agent session monitoring with composition-awareness: flag or block agent request flows that sequence secret retrieval followed by transactional mutation in different domains.",
+    "Require explicit review of agent multi-hop reasoning and place strong logging/approval on any scenario where identity, credential, or payment-related tools interact with transactional/cart update APIs.",
+    "Harden environment by isolating trust contexts per-server or using sandboxing that blocks credential/secret transfer between domains.",
+    "Apply rate limiting and anomaly detection to sequences involving both financial and cart actions within limited time windows."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Do not allow 'get_secret_word_0' to be invoked in sessions where any pitchskin cart update or get_cart tool is accessible.",
+    "Flag and require explicit approval for agent flows that transfer secrets, tokens, or credit data between ServerRogueMCP2 and pitchskin tool invocations.",
+    "Require joint authorization review for any workflow that would allow both financial and cart modification APIs in a single agent session."
+  ]
+}
