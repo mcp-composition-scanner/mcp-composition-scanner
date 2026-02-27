@@ -1,0 +1,41 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "puppeteer_navigate",
+      "risk_summary": "Navigate to a URL in the browser.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "puppeteer_screenshot",
+      "risk_summary": "Take a screenshot of the current page or specific element.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "puppeteer_click",
+      "risk_summary": "Click an element on the page using CSS selector.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "puppeteer_fill",
+      "risk_summary": "Fill out an input field with specified value.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "puppeteer_select",
+      "risk_summary": "Select an option in a select element.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "puppeteer_hover",
+      "risk_summary": "Hover over an element on the page.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "puppeteer_evaluate",
+      "risk_summary": "Execute arbitrary JavaScript in the browser console.",
+      "risk_level": "High"
+    }
+  ],
+  "overall_risk_score": "Medium",
+  "action": "ALLOW"
+}

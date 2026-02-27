@@ -1,0 +1,283 @@
+{
+  "servers_analyzed": [
+    "filesystem",
+    "fetch"
+  ],
+  "total_tools": 13,
+  "pairwise_combinations": 78,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "read_text_file",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_media_file",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_multiple_files",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "write_file",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "edit_file",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_directory",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_directory",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_directory_with_sizes",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "directory_tree",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "move_file",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_files",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_file_info",
+      "server_origin": "filesystem",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "fetch",
+      "server_origin": "fetch",
+      "capability_classes": [
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        },
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "Medium"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "read_text_file",
+      "tool_a_server": "filesystem",
+      "tool_b": "fetch",
+      "tool_b_server": "fetch",
+      "additional_tools": [],
+      "emergent_capability": "Read local sensitive files and exfiltrate contents to arbitrary external endpoints.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "A reasoning model uses read_text_file to extract the contents of sensitive local files (e.g., secrets, credentials, code) and, with the fetch tool, makes a web request to a controlled endpoint, including the sensitive data as part of a URL or HTTP POST. Together, these tools allow autonomous, undetectable exfiltration.",
+      "is_cross_server": true,
+      "environment_conditions": "No egress filtering; fetch can access arbitrary URLs; local file system contains sensitive or confidential data.",
+      "existing_governance_gap": "A per-server or per-tool review sees only local file reads (filesystem) and safe web fetching (fetch), but combining allows sensitive data egress."
+    },
+    {
+      "id": "S2",
+      "tool_a": "read_multiple_files",
+      "tool_a_server": "filesystem",
+      "tool_b": "fetch",
+      "tool_b_server": "fetch",
+      "additional_tools": [],
+      "emergent_capability": "Bulk remote sweep and exfiltration of large numbers of files.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "A model can use read_multiple_files to collect directory-wide contents, then iteratively use fetch to transmit each file's data in sequence to external endpoints. This enables autonomous, scalable exfiltration.",
+      "is_cross_server": true,
+      "environment_conditions": "No egress filtering; fetch allows transmitting arbitrary content.",
+      "existing_governance_gap": "Reviewers see only local file reads and safe web fetches, miss aggregate risk: model can pipeline bulk file reads into fetch calls."
+    },
+    {
+      "id": "S3",
+      "tool_a": "search_files",
+      "tool_a_server": "filesystem",
+      "tool_b": "fetch",
+      "tool_b_server": "fetch",
+      "additional_tools": [
+        "read_text_file"
+      ],
+      "emergent_capability": "Targeted exfiltration of discovered file types (e.g., all SSH keys, config files).",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "search_files lets the model enumerate sensitive files matching patterns (such as *secret*, *.key, .env), which it then extracts and transmits using fetch.",
+      "is_cross_server": true,
+      "environment_conditions": "No egress filtering; fetch supports arbitrary URLs or webhooks.",
+      "existing_governance_gap": "Patterned search across filesystem is innocuous, fetch calls are innocuous, but together enable highly-targeted data exfiltration with fine-tuned precision."
+    },
+    {
+      "id": "S4",
+      "tool_a": "get_file_info",
+      "tool_a_server": "filesystem",
+      "tool_b": "fetch",
+      "tool_b_server": "fetch",
+      "additional_tools": [
+        "read_text_file"
+      ],
+      "emergent_capability": "Profiling and reporting sensitive metadata externally (file structure, presence, modification times).",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Medium",
+      "reasoning": "A model uses get_file_info (optionally directory_tree/list_directory) to collect intelligence about local files and structure, then uses fetch to transmit this metadata (even if leak of file contents is not allowed, metadata alone may be valuable to attackers).",
+      "is_cross_server": true,
+      "environment_conditions": "No egress filtering; fetch allowed to transmit arbitrary payloads.",
+      "existing_governance_gap": "Local file/directory inspection appears safe, fetch for web access appears safe—composition enables leaking a map of sensitive assets."
+    },
+    {
+      "id": "S5",
+      "tool_a": "write_file",
+      "tool_a_server": "filesystem",
+      "tool_b": "fetch",
+      "tool_b_server": "fetch",
+      "additional_tools": [],
+      "emergent_capability": "Automated backdoor or implant delivery from external sources directly to local filesystem.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "High",
+      "reasoning": "The model uses fetch to retrieve hostile payloads (malware/scripts) from the web, then writes them to the local filesystem via write_file. This enables direct supply chain attacks—fetching then storing new code or implants.",
+      "is_cross_server": true,
+      "environment_conditions": "fetch can retrieve from untrusted/internet sources; filesystem write access not restricted.",
+      "existing_governance_gap": "Each permission (fetch, write_file) seems benign; their composition enables code drops with supply-chain implications. Per-tool consent cannot foresee this chain."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "AC1",
+      "name": "Sensitive file exfiltration to Internet",
+      "composition_surpluses_used": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "steps": [
+        "Use read_multiple_files and/or search_files to enumerate and extract local sensitive files.",
+        "For each discovered file, read contents using read_text_file.",
+        "For each file/content, invoke fetch with an attacker-controlled URL, embedding or POSTing the content."
+      ],
+      "final_capability": "Autonomous, large-scale exfiltration of sensitive internal data to attacker-controlled endpoints.",
+      "severity": "Critical",
+      "human_approval_bypass": "Each file read or fetch appears as an innocuous local or web operation. Only the chain—reading then exfiltrating—constitutes data loss.",
+      "mitigation": "Require mutual exclusion of fetch and filesystem read tools; session-level data-flow tracking to block any fetch invocation containing recently-read sensitive data."
+    },
+    {
+      "chain_id": "AC2",
+      "name": "Remote payload delivery and write",
+      "composition_surpluses_used": [
+        "S5"
+      ],
+      "steps": [
+        "Model invokes fetch on an arbitrary external source to retrieve a file (e.g., script, binary, config).",
+        "Contents are provided to write_file or edit_file to deposit them in the local filesystem, creating or substituting files.",
+        "Potential attacker gains code execution on the environment via further subversion."
+      ],
+      "final_capability": "Autonomous delivery of malicious code or backdoor from uncontrolled sources into the local system.",
+      "severity": "High",
+      "human_approval_bypass": "Downloading public web content and writing files look like expected operations for these tools in isolation.",
+      "mitigation": "Block writing files from content fetched via the fetch tool; restrict fetch to whitelisted/approved domains; inspect content before allowing writes."
+    }
+  ],
+  "cross_server_risk_summary": "The primary composition risk between filesystem and fetch is the combination of local file access (read and write) with network egress (fetch). This enables: a) reading sensitive or bulk files and exfiltrating them autonomously, and b) importing hostile code or configuration directly from remote sources to the local filesystem. These capabilities do not exist for either server alone and emerge only in cross-server composition.",
+  "composition_risk_score": "Critical",
+  "governance_blind_spots": [
+    "Per-server review considers filesystem tools to be local-only and safe for internal automation, and fetch to be safe for internet content retrieval, but cannot see the exfiltration vector that emerges when both can be used in one session.",
+    "Bulk or targeted exfiltration via search and aggregation is invisible to reviewers approving each tool individually.",
+    "Fetching and writing hostile code for supply-chain insertion is invisible to fetch or write_file review in isolation."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion: Do not allow both filesystem file access (read/write tools) and fetch tool to be invoked within the same model session/context.",
+    "Implement data-flow tracking: Flag and block attempts to pass output from file read tools to external fetch/post operations.",
+    "Restrict fetch: Limit to pre-approved internet domains, or block HTTP POST/parameterized fetch from uncontrolled URLs.",
+    "Inspect and sanitize: For any data written to filesystem using external sources, require content inspection or approval.",
+    "Monitor for high-risk chains: Alert on patterns indicating bulk file reads followed by outgoing requests."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Mutual exclusion policy: filesystem read/write and fetch tool must not be co-invoked in the same agent session.",
+    "If both toolsets must be enabled, implement a quarantine or content-inspection step between read/write and any fetch operation in the same session.",
+    "Restrict fetch tool to GET-only and to a whitelist of domains.",
+    "Flag/block any fetch invocation where request payload or URL is constructed from recently-read local file contents."
+  ]
+}

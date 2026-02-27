@@ -1,0 +1,497 @@
+{
+  "servers_analyzed": [
+    "postgres",
+    "desktop-commander",
+    "sendgrid"
+  ],
+  "total_tools": 32,
+  "pairwise_combinations": 496,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "query",
+      "server_origin": "postgres",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_file",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "write_file",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "edit_block",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_multiple_files",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_directory",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_directory",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "move_file",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_file_info",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "start_process",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "Execute",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "interact_with_process",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "Execute",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_process_output",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "force_terminate",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "Execute",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_sessions",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_processes",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "kill_process",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "Execute",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "start_search",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_more_search_results",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "stop_search",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "write_pdf",
+      "server_origin": "desktop-commander",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_contact",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_to_list",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_templates",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_stats",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "validate_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_verified_senders",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous exfiltration of arbitrary database query results to external email recipients without human review.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "The 'query' tool allows read access to any database record. The 'send_email' tool allows arbitrary email transmission via a non-human channel. A reasoning model can chain these by (1) running an arbitrary SQL query, (2) marshalling/selecting sensitive data, and (3) sending results to a specified email address controlled by an external party, bypassing DLP controls and human audit trails.",
+      "is_cross_server": true,
+      "environment_conditions": "No outbound filtering on sendgrid API, agent able to construct/parse email payloads.",
+      "existing_governance_gap": "Postgres server would see only data reads; sendgrid server sees only innocuous emails. Neither server, in isolation, can detect the DataExfiltration risk from cross-composition."
+    },
+    {
+      "id": "S2",
+      "tool_a": "read_file",
+      "tool_a_server": "desktop-commander",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Exfiltration of sensitive file contents from the local desktop environment to external parties via email, including recursive and bulk file operations.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "The 'read_file' tool can read arbitrary files. Combined with 'send_email', any file on disk can be autonomously forwarded to any email destination, including attackers. Chaining file search/discovery and bulk-read tools amplifies this risk (e.g., recursive file reads, attachment packaging).",
+      "is_cross_server": true,
+      "environment_conditions": "sendgrid accessible for outbound email, desktop agent's file access not restricted.",
+      "existing_governance_gap": "Desktop review sees read_file as benign/local; sendgrid review sees legitimate email uses. The combined risk of file exfiltration is unreviewable in single-server governance."
+    },
+    {
+      "id": "S3",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "write_file",
+      "tool_b_server": "desktop-commander",
+      "additional_tools": [
+        "send_email"
+      ],
+      "emergent_capability": "Exfiltration of database contents by staging them in local files and sending them via email, with optional file packaging or transformation.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "Agent chains: (1) Run SQL query in database, (2) write results to a file in the desktop environment (CSV, DOCX, PDF, etc.), (3) use 'send_email' to deliver the file as an attachment. This allows large-scale, structured or reformatted leaks (e.g., export full tables as XLS).",
+      "is_cross_server": true,
+      "environment_conditions": "Agent can write unrestricted files and send as outgoing email attachments.",
+      "existing_governance_gap": "Neither the DB nor desktop server sees the full attack surface — sensitive SQL exports can be staged in files, then exfiltrated via a messaging channel invisible to their own policy controls. Cross-composition is the blind spot."
+    },
+    {
+      "id": "S4",
+      "tool_a": "start_process",
+      "tool_a_server": "desktop-commander",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Execution of custom scripts/code that collect, transform, or compress sensitive data for exfiltration via outbound email.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "Any locally executable code can be run (Python, shell scripts), e.g., for data scraping, credential harvesting, output transformation, compression, and aggregation. Output can then be sent out as email contents or attachments. Models may automatically optimize for large or stealthy data export.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent can execute arbitrary processes and escalate to use network/messaging tools.",
+      "existing_governance_gap": "Execution ('start_process') appears safe in desktop context; sending arbitrary content by email via sendgrid is a communication channel. Only in composition can code be executed with results exfiltrated off-host, defeating audit controls."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "AC1",
+      "name": "Database → File → Email Exfiltration Chain",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Run a sensitive query on the Postgres database using the 'query' tool.",
+        "Write results to a local file (CSV, DOCX, PDF, etc.) using 'write_file'.",
+        "Use 'send_email' to send the output file as an attachment to an external recipient."
+      ],
+      "final_capability": "Stealth export of large volumes of sensitive DB data to unmonitored destinations, including via formatted or bulk file attachments.",
+      "severity": "Critical",
+      "human_approval_bypass": "Each step appears business-justified: querying, file writing/conversion, and business messaging are normal. Only the full data pipeline constitutes a breach.",
+      "mitigation": "Implement mutual exclusion: do not allow 'query', 'write_file', and 'send_email' to be used together in the same session; enforce context-aware DLP at composition boundaries."
+    },
+    {
+      "chain_id": "AC2",
+      "name": "Desktop Filesystem Exfiltration by Email",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Use 'read_file' or 'read_multiple_files' to access files of interest, possibly discovered via 'list_directory' or 'start_search'.",
+        "Optionally reformat, compress, or rename content with 'start_process' or 'edit_block'.",
+        "Send file contents or attachments externally using 'send_email'."
+      ],
+      "final_capability": "Mass or targeted exfiltration of sensitive documents, credentials, or process dumps outside organizational control.",
+      "severity": "Critical",
+      "human_approval_bypass": "Reading local files, editing, and emailing as daily workflow. No single tool invocation appears suspicious.",
+      "mitigation": "Enforce that 'read_file' + 'send_email' are not co-invoked in a session; add DLP constraints at the agent level, not just per tool."
+    },
+    {
+      "chain_id": "AC3",
+      "name": "Automated Code Execution and Email Exfiltration",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "Use 'start_process' to fetch, decrypt, or process sensitive information (arbitrary code execution).",
+        "Package results with 'write_file' or output directly.",
+        "Send output to external parties via 'send_email'."
+      ],
+      "final_capability": "Automated code execution leading to rapid, undetected data exfiltration, possibly with custom compression/encryption.",
+      "severity": "Critical",
+      "human_approval_bypass": "Running local code/scripts and emailing output fits many IT workflows. Only integrated audit would detect the pipeline.",
+      "mitigation": "Limit 'start_process' and 'send_email' use within the same session. Forbid execution of downloaded code/scripts immediately sent as messages."
+    },
+    {
+      "chain_id": "AC4",
+      "name": "Direct DB-to-Email Data Leak",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Query DB for sensitive data via 'query'.",
+        "Format/copy results directly into email body via 'send_email'."
+      ],
+      "final_capability": "Rapid exfiltration of database information via trusted email without local file traces.",
+      "severity": "Critical",
+      "human_approval_bypass": "Business emails often summarize analytics or queries; DB queries with no obvious data egress. Context is needed to see the end-to-end risk.",
+      "mitigation": "Block or require high-scrutiny for any workflow that integrates both DB queries and email messaging tools."
+    }
+  ],
+  "cross_server_risk_summary": "Allowing an agent to combine desktop, database, and outbound messaging tools enables autonomous, large-scale, and stealthy data exfiltration to external entities. Each server's tools are benign in isolation, but the composition creates a channel for extraction and egress of any accessible file or data source with no effective guardrail in MCP's current per-server tool review model.",
+  "composition_risk_score": "Critical",
+  "governance_blind_spots": [
+    "Per-tool and per-server review fail to see that combining file/database read capabilities with outbound messaging (email) creates immediate exfiltration risks.",
+    "Neither desktop nor DB servers have audit visibility into external email recipients or content transmitted.",
+    "Automated agent chaining (e.g., converting DB output to files, then sending via email) is invisible to workflow/capability tracking at the server level.",
+    "Business-appropriate tool scopes ('read file', 'send email', 'query DB') do not flag risk when considered individually, only when composed.",
+    "No DLP or workflow interlocks exist at the agent (cross-server) level under current governance."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion constraints so that read-capable (file/database) tools and sendgrid email tools cannot be used in the same agent session.",
+    "Implement session-level tracking and alerting for multi-tool workflows that pipeline sensitive data off-system.",
+    "Require explicit human approval for any session that attempts to chain read-file/db-query and outbound email capabilities.",
+    "Deploy agent-level DLP: scan all outbound data payloads for sensitive content, flag/hold email transmissions containing structured data or suspicious volumes.",
+    "Restrict 'start_process' tool for agents able to access outbound messaging APIs, or tightly control which code can be executed.",
+    "Harden environment configuration: disable network egress to sendgrid for agents needing only database or desktop access.",
+    "Review and potentially ban tool compositions that enable unsupervised autonomous exfiltration unless strong oversight exists."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Do not allow 'send_email' or 'send_to_list' (sendgrid) to be invoked in the same session as any of: 'query' (postgres), 'read_file', 'read_multiple_files', 'write_file', 'start_process' (desktop-commander).",
+    "If database or file read/write tools are authorized, require separate, human-initiated workflows to transmit results outside the local/DB environment.",
+    "Monitor and flag any agent workflow that attempts to transport data from a read-capable tool (DB/filesystem) to an outbound messaging function during a session.",
+    "Disallow agent-initiated attachments or email sends where the payload is derived from recent database queries or file reads without explicit human review."
+  ]
+}

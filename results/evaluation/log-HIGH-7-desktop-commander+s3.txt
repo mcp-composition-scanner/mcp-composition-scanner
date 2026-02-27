@@ -1,0 +1,88 @@
+Collecting tools from result files...
+  ✓ desktop-commander (from file): 19 tools extracted
+  ✓ s3 (from file): 3 tools extracted
+
+▶ Running composition analysis on 22 tools from 2 servers...
+  Pairwise search space: 231 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    desktop-commander, s3
+  Tools:      22
+  Pairs:      231
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 5
+
+  [S1] High [CROSS-SERVER]
+    Tools: read_file (desktop-commander) ⊕ GetObject (s3)
+    Emergent: Agent can autonomously transfer sensitive files from S3 buckets to the local desktop environment, bridging cloud and local system boundaries.
+    Class: DataExfiltration
+    Environment: No egress restrictions between desktop and cloud; agent retains S3 credentials; local file system write access allowed.
+    Gap: desktop-commander review sees only local file I/O; s3 review sees only S3 reads. The emergent cloud-to-local flow enabling large-scale cloud data extraction is invisible unless tools are reviewed in concert.
+
+  [S2] High [CROSS-SERVER]
+    Tools: read_file (desktop-commander) ⊕ ListObjectsV2 (s3)
+    + GetObject
+    Emergent: Automated discovery, enumeration, and local replication of entire S3 buckets onto the desktop.
+    Class: DataExfiltration
+    Environment: No egress/network restrictions; S3 credentials; local file write access.
+    Gap: Per-server reviews cover only S3 browsing or local read/write. The cross-server chain enabling full-cloud-to-local replication would not be detected unless tool uses are contextually composed.
+
+  [S3] Critical [CROSS-SERVER]
+    Tools: read_multiple_files (desktop-commander) ⊕ ListBuckets (s3)
+    + ListObjectsV2, GetObject
+    Emergent: Agent can crawl ALL S3 buckets in the account, then recursively download all their contents to local storage—mass cloud data scrape across all buckets.
+    Class: DataExfiltration
+    Environment: No API throttling, S3 credentials valid, unconstrained local disk I/O.
+    Gap: Neither desktop-commander nor s3 alone admits mass cloud → local copying. The model can batch-orchestrate a scrape undetectable to per-tool or per-server access reviews.
+
+  [S4] High [CROSS-SERVER]
+    Tools: write_file (desktop-commander) ⊕ GetObject (s3)
+    Emergent: Cloud-to-local malware delivery: Executable or script objects stored in S3 can be written directly to the desktop, possibly including persistence mechanisms.
+    Class: SupplyChainModification
+    Environment: Write/execute permissions on desktop. No AV/endpoint controls blocking unauthorized file writes/execution. S3 can store arbitrary binaries.
+    Gap: S3 tools look like safe storage APIs, desktop-commander review sees only local writes. The cross-server chain turns S3 into an infection origin.
+
+  [S5] High [CROSS-SERVER]
+    Tools: GetObject (s3) ⊕ start_process (desktop-commander)
+    + write_file
+    Emergent: Autonomous download and execution of code or scripts supplied via S3 objects, enabling remote code execution from cloud store to endpoint.
+    Class: Execute
+    Environment: Script/interpreter/execute permissions on desktop; S3 read and local write access.
+    Gap: Start_process alone is benign if only local files are used; S3 read alone is inert. Jointly, this chain enables remote, indirect code execution under agent control.
+
+  ⚠ ATTACK CHAINS: 2
+
+  [AC1] Bulk S3 Data Exfiltration to Desktop — Critical
+    Final capability: Mass cloud→endpoint data exfiltration with full S3 traversal.
+    Approval bypass: Each tool call appears as a standard list/read/write operation; no single call triggers exfiltration alarms.
+    Step 1: Invoke s3/ListBuckets to enumerate all accessible S3 buckets.
+    Step 2: For each bucket, call s3/ListObjectsV2 to list all file keys.
+    Step 3: For each key, use s3/GetObject to fetch file contents.
+    Step 4: With each object, invoke desktop-commander/write_file to replicate cloud data locally.
+
+  [AC2] Covert Cloud-to-Desktop Malware Dropper — High
+    Final capability: Agent-driven remote code execution via S3-hosted payloads.
+    Approval bypass: Each step is an ordinary read/write/execute; only their combination turns S3 into a covert malware delivery vector.
+    Step 1: Fetch executable/script file from S3 bucket (s3/GetObject).
+    Step 2: Persist file on local desktop using desktop-commander/write_file.
+    Step 3: Invoke desktop-commander/start_process to execute file silently.
+
+  GOVERNANCE BLIND SPOTS:
+    • S3 tool authorizers cannot see or restrict the local desktop's ability to persist or execute retrieved objects.
+    • Desktop-commander reviewers see only local file/process APIs—loss of context on data origin and purpose.
+    • Bulk cloud-to-endpoint data flows, and code execution sourced from cloud storage, emerge only in the inter-server composition and evade independent audits.
+
+  RECOMMENDED CONSTRAINTS:
+    • Prohibit chains where an S3 object is fetched/written to local disk and then executed within the same session.
+    • Enforce mutual exclusion between s3 GetObject/ListObjects/ListBuckets and desktop-commander write_file/start_process/read_file in any one agent context.
+    • Require explicit user approval for any S3→desktop file transfer or execution, with full transfer provenance displayed.
+    • Alert and rate-limit on any bulk or recursive S3 file retrieval coupled with local writes in a session.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100902-COMPOSITION-desktop-comm+s3.json

@@ -1,0 +1,77 @@
+Collecting tools from result files...
+  ✓ redis (from file): 19 tools extracted
+  ✓ puppeteer (from file): 7 tools extracted
+
+▶ Running composition analysis on 26 tools from 2 servers...
+  Pairwise search space: 325 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    redis, puppeteer
+  Tools:      26
+  Pairs:      325
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 3
+
+  [S1] High [CROSS-SERVER]
+    Tools: redis (any data retrieval tools) (redis) ⊕ puppeteer_evaluate (puppeteer)
+    Emergent: Autonomous exfiltration of internal Redis database records to arbitrary external web endpoints via JavaScript execution in the browser.
+    Class: DataExfiltration
+    Environment: Requires that browser automation has network access and can execute arbitrary JS (no egress filtering, browser sandbox is not tightly restricted).
+    Gap: Per-server review sees redis as an internal data store and puppeteer as browser automation for UI tasks. There’s no apparent exfiltration risk unless these capabilities are cross-combined.
+
+  [S2] High [CROSS-SERVER]
+    Tools: subscribe (redis) (redis) ⊕ puppeteer_evaluate (puppeteer)
+    Emergent: Stealthy, session-persistent surveillance: model subscribes to redis pub/sub channels for sensitive events, and upon trigger, pivots to puppeteer to automate browser actions, take screenshots, or manipulate web content.
+    Class: Surveillance
+    Environment: Requires both pub/sub integration and uninterrupted puppeteer access.
+    Gap: Independently, redis messaging is purely internal and puppeteer actions are just web automation. Combined, they allow real-time, event-triggered surveillance and data transfer.
+
+  [S3] High [CROSS-SERVER]
+    Tools: json_store/json_manipulate (redis) (redis) ⊕ puppeteer_navigate/puppeteer_evaluate (puppeteer)
+    Emergent: Autonomous data poisoning of web workflows: agent stores malicious payloads or misleading data in redis (upstream of UI), then uses puppeteer to trigger and validate its processing on UI or downstream apps.
+    Class: SupplyChainModification
+    Environment: System must have a shared data flow between redis-backed data and the UI reachable by puppeteer; assumes no sanitization is enforced.
+    Gap: Redis JSON manipulation seen as business logic; puppeteer seen as testing/automation. Their combination enables live UI supply chain attacks.
+
+  ⚠ ATTACK CHAINS: 3
+
+  [C1] Internal Data Exfiltration via Browser Automation — High
+    Final capability: Exfiltration of internal system data to arbitrary external destination
+    Approval bypass: Each step appears benign: read data from redis (routine data access); run 'evaluate' in browser (common for UI testing); but the chain is not individually suspicious.
+    Step 1: Read sensitive data from redis using json_retrieve, get_string, or hash_get.
+    Step 2: Prepare JavaScript payload (with puppeteer_evaluate) that sends this data via fetch() or form to an external endpoint.
+    Step 3: Navigate to a benign site or directly execute the JS to exfiltrate data.
+    Step 4: Optionally validate exfiltration success.
+
+  [C2] Event-Driven Surveillance or Triggered Exfiltration — High
+    Final capability: Stealthy surveillance or targeted exfiltration triggered by internal system events
+    Approval bypass: Subscribing to events is a standard pattern for reactive systems; automating puppeteer in response to events is also routine in testing scenarios.
+    Step 1: Subscribe to redis pub/sub for sensitive events (e.g., subscribe to login or transaction channel).
+    Step 2: On receiving a trigger event, launch puppeteer actions (e.g., take screenshot, scrape sensitive UI, or start exfiltration chain via puppeteer_evaluate).
+    Step 3: Optionally publish updates or keep event loop running.
+
+  [C3] Automated Supply Chain Poisoning with UI Validation — High
+    Final capability: Supply chain compromise of web-facing systems by leveraging backend control and UI automation
+    Approval bypass: Writing JSON and automating browser actions seem like normal testing/dev activities, not malicious in isolation.
+    Step 1: Craft and store malicious JSON (e.g., script injection) in redis via json_store/json_manipulate.
+    Step 2: Use puppeteer_navigate to open the affected UI or API endpoint relying on redis data.
+    Step 3: Use puppeteer_evaluate or puppeteer_screenshot to validate/observe effects (e.g. confirm XSS or data/logic manipulation).
+
+  GOVERNANCE BLIND SPOTS:
+    • Per-tool and per-server reviews see redis as only enabling internal data operations, and puppeteer as a UX testing/automation tool. No single review process would highlight the cross-boundary risk of data exfiltration, surveillance, or direct supply chain poisoning when these are composed.
+    • Policies that restrict data egress at individual tool or server level fail if browser egress is possible (via puppeteer).
+    • Event-driven attack chains orchestrated via pub/sub and browser control are not covered by existing reactive controls.
+
+  RECOMMENDED CONSTRAINTS:
+    • Do not permit sessions to access both redis data extraction tools and puppeteer_evaluate (or any JS-executing puppeteer tool) unless network egress from puppeteer is strictly filtered.
+    • Trigger security alert/workflow review if redis subscribe/publish and puppeteer automation are combined in the same session.
+    • Audit for sequences where a session both writes to redis (especially with json_store/manipulate) and then immediately orchestrates puppeteer browser navigation to the affected UI.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100950-COMPOSITION-redis+puppeteer.json

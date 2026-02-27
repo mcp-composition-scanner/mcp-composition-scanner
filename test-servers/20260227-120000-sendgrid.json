@@ -1,0 +1,66 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "list_contacts",
+      "risk_summary": "Retrieve all contacts in SendGrid account.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "add_contact",
+      "risk_summary": "Create new contact with email, name, custom fields.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "delete_contacts",
+      "risk_summary": "Remove contacts by email address.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "send_email",
+      "risk_summary": "Deliver email to recipient using verified sender identity.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "send_to_list",
+      "risk_summary": "Conduct bulk email sending to contact list via Single Sends API.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "create_template",
+      "risk_summary": "Build dynamic email template with handlebars syntax.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "list_templates",
+      "risk_summary": "View all dynamic email templates.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "get_template",
+      "risk_summary": "Retrieve specific template by ID.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "delete_template",
+      "risk_summary": "Remove template from account.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "get_stats",
+      "risk_summary": "Obtain email sending statistics with date range and aggregation.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "validate_email",
+      "risk_summary": "Verify email address validity.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "list_verified_senders",
+      "risk_summary": "Display authorized sender identities.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "High",
+  "action": "ALLOW"
+}

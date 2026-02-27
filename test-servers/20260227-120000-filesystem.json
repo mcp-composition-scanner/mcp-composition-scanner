@@ -1,0 +1,66 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "read_text_file",
+      "risk_summary": "Read complete contents of a file as text with support for head/tail.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "read_media_file",
+      "risk_summary": "Read an image or audio file as base64-encoded data.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "read_multiple_files",
+      "risk_summary": "Read contents of multiple files simultaneously.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "write_file",
+      "risk_summary": "Write content to a file, replacing existing content.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "edit_file",
+      "risk_summary": "Edit a file by applying multiple text replacements.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "create_directory",
+      "risk_summary": "Create a new directory or multiple nested directories.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "list_directory",
+      "risk_summary": "List files and directories in a specified path.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "list_directory_with_sizes",
+      "risk_summary": "List directory contents with file sizes.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "directory_tree",
+      "risk_summary": "Get tree view of a directory with optional exclusion patterns.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "move_file",
+      "risk_summary": "Move or rename files and directories.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "search_files",
+      "risk_summary": "Search for files matching a pattern in a directory.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "get_file_info",
+      "risk_summary": "Get detailed metadata about files.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Medium",
+  "action": "ALLOW"
+}

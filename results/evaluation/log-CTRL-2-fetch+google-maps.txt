@@ -1,0 +1,67 @@
+Collecting tools from result files...
+  ✓ fetch (from file): 1 tools extracted
+  ✓ google-maps (from file): 7 tools extracted
+
+▶ Running composition analysis on 8 tools from 2 servers...
+  Pairwise search space: 28 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    fetch, google-maps
+  Tools:      8
+  Pairs:      28
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 2
+
+  [S1] High [CROSS-SERVER]
+    Tools: fetch (fetch) ⊕ maps_search_places (google-maps)
+    + maps_place_details
+    Emergent: Autonomous web recon and contextual place-based data extraction given a geographic location or query, with egress of arbitrarily-retrieved content from discovered business/place websites.
+    Class: DataExfiltration
+    Environment: Requires network egress to arbitrary external URLs. The environment must not block outbound HTTP(s) requests.
+    Gap: A per-tool or per-server review would see google-maps tools as only returning structured place data, and fetch as generic page fetch. Only in composition can a model chain: 'find N businesses in Paris' → 'extract their homepages' → 'fetch all content', which is leaky and can be repurposed for scraping, targeted exfiltration, or automated reconnaissance.
+
+  [S2] High [CROSS-SERVER]
+    Tools: fetch (fetch) ⊕ maps_reverse_geocode (google-maps)
+    Emergent: Automated deanonymization: transforming raw location/coordinate data found in arbitrary web content into physical addresses, potentially exposing personal or sensitive physical locations unexpectedly.
+    Class: Surveillance
+    Environment: Requires network egress and sufficient parsing to extract coordinates.
+    Gap: Each server only exposes atomic, seemingly benign capabilities (web fetch, address look-up). Composition enables automated surveillance workflows, invisible in per-server review.
+
+  ⚠ ATTACK CHAINS: 2
+
+  [C1] Place-to-Website Recon and Mass Exfiltration — High
+    Final capability: Mass automated extraction of web content ranging from public to potentially sensitive sources, fully automated given only a geospatial query.
+    Approval bypass: Each step (place search, place enrichment, content fetch) is individually benign and routine for business intelligence or research. Only the full-chain exfiltration, especially at scale, is problematic but not apparent in human-in-the-loop review.
+    Step 1: User/task provides a geospatial query (e.g., 'all coffee shops in Amsterdam').
+    Step 2: maps_search_places identifies a list of businesses.
+    Step 3: For each business, maps_place_details provides expanded info, including website URLs.
+    Step 4: fetch downloads/extracts arbitrary data from each business website (could include scraping unprotected customer lists, proprietary info, or exposed data dumps).
+    Step 5: Results are compiled and output.
+
+  [C2] Web-to-Address Automated Surveillance — High
+    Final capability: Automated extraction and geolocation (deanonymization) of sensitive locations from web content.
+    Approval bypass: fetching a document and converting coordinates to addresses both appear routine. The composition, applied broadly or at scale, converts semi-anonymous raw data into actionable surveillance intelligence.
+    Step 1: fetch downloads a web page (for example, a forum post or document repository containing GPS coordinates, EXIF tags, etc.).
+    Step 2: AI agent parses/extracts coordinates from page content.
+    Step 3: maps_reverse_geocode converts each coordinate into a physical address.
+    Step 4: Agent outputs or cross-references these addresses for downstream use (e.g., alerting, mapping, targeted actions).
+
+  GOVERNANCE BLIND SPOTS:
+    • Per-tool review: fetch appears as a neutral web content retriever with no geospatial context; google-maps APIs only return metadata on places or locations. Only in composition does unbounded, automated geospatial recon and targeted scraping emerge.
+    • Per-server review: Each server is low-risk in isolation. Cross-server agent autonomy is the only path to dangerous deanonymization or mass data exfiltration.
+    • Neither server’s perimeter can stop full-chain exfiltration because each action is explainable individually and only problematic in aggregate.
+
+  RECOMMENDED CONSTRAINTS:
+    • Enforce policy: fetch and google-maps tools must not be co-invoked by the same session unless explicitly justified and authorized.
+    • Require agent-level logs of workflow chains and trigger audits on multi-tool compositions crossing geospatial and network egress boundaries.
+    • Enforce monitoring and alerts for sequences matching the high-risk chains above.
+    • Disallow automated transformation of coordinates in fetched web content into addresses at scale unless whitelisted.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101247-COMPOSITION-fetch+google-maps.json

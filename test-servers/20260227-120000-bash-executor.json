@@ -1,0 +1,16 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "set_cwd",
+      "risk_summary": "Set working directory for subsequent bash command executions.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "execute_bash",
+      "risk_summary": "Execute arbitrary bash command and return stdout/stderr output.",
+      "risk_level": "High"
+    }
+  ],
+  "overall_risk_score": "High",
+  "action": "ALLOW"
+}

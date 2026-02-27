@@ -1,0 +1,249 @@
+{
+  "servers_analyzed": [
+    "postgres",
+    "sendgrid"
+  ],
+  "total_tools": 13,
+  "pairwise_combinations": 78,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "query",
+      "server_origin": "postgres",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_contact",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_to_list",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_templates",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_stats",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "validate_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "Authentication",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_verified_senders",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "Authentication",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Exfiltrate arbitrary database query results to external email recipients—including unauthorized parties outside the organization—entirely via agent-automated workflow.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "The agent can use 'query' to extract any data from the database (e.g., PII, credentials, sensitive business data). It then passes the results into the 'send_email' (or 'send_to_list') tool to deliver them to attacker-controlled or external email addresses. Neither tool alone enables data exfiltration: 'query' only reads; 'send_email' can only message what it's given. Combined, they break organizational data boundaries via covert egress.",
+      "is_cross_server": true,
+      "environment_conditions": "No restrictions on where sendgrid emails can be delivered; agent permitted to use both tools in the same workflow/session; no DLP or egress filtering on email content.",
+      "existing_governance_gap": "Per-server authorization classifies 'query' as read-only (safe) and 'send_email' as internal-messaging (safe); no per-tool analysis detects that, when cross-authorized, these enable full database exfiltration. Reviewers on each server would not see workflow context."
+    },
+    {
+      "id": "S2",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "add_contact",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [
+        "send_email"
+      ],
+      "emergent_capability": "Harvest and import potentially confidential or proprietary email addresses or contact information from database into the SendGrid contact list for subsequent bulk or targeted messaging.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "Medium",
+      "reasoning": "An agent can 'query' the database for user/customer/prospect records, extract email addresses, and directly add these as SendGrid contacts via 'add_contact'. It then enables mass unsolicited communication or further information gathering operations, all outside typical HR/marketing controls.",
+      "is_cross_server": true,
+      "environment_conditions": "No constraints on what data can be read from postgres; agent allowed to invoke contact creation programmatically.",
+      "existing_governance_gap": "Database access tool is reviewed for reporting, not for exporting user identities; the SendGrid contact tool is for opt-in bulk mail. Chaining allows for surreptitious DIY email list building, invisible to either team."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Database Exfiltration via Outbound Email",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Approve agent to query table(s) in postgres for sensitive records (customer data, credentials, proprietary information).",
+        "Agent receives and structures the results as JSON.",
+        "Agent formats or chunks content as needed and calls sendgrid's 'send_email' or 'send_to_list' to transmit results to an attacker-controlled or external address."
+      ],
+      "final_capability": "Unauthorized mass or targeted exfiltration of data from postgres to external entities through sendgrid.",
+      "severity": "High",
+      "human_approval_bypass": "Each step individually appears benign: reading database (common analytics/reporting need), then sending email (routine business comms). Human approvers will not connect that the email content is a complete data export.",
+      "mitigation": "Enforce mutual exclusion: Do not allow 'query' and 'send_email' (or any messaging/egress tool) to be authorized for the same agent/session. Alternatively, require content DLP/monitoring on all outbound messaging by agents."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Harvesting Internal Contacts for Spam/Spearphishing",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Approve agent to query for user/customer records in postgres.",
+        "Agent extracts email addresses from results.",
+        "Agent calls sendgrid's 'add_contact' to populate SendGrid address book with harvested emails.",
+        "Optionally, agent crafts targeted messages and delivers them to these addresses using sendgrid's 'send_email' or 'send_to_list'."
+      ],
+      "final_capability": "Unapproved import of internal/external contacts into bulk messaging platform for potential spam or social engineering.",
+      "severity": "Medium",
+      "human_approval_bypass": "Adding contacts individually, querying a database for emails, and bulk messaging can each look legitimate in isolation.",
+      "mitigation": "Require an explicit linkage check or approval anytime new contacts are added programmatically from a non-authorized data source (like arbitrary DB queries). Specifically monitor for bulk additions that closely follow sensitive DB queries."
+    }
+  ],
+  "cross_server_risk_summary": "When 'postgres' (query) and 'sendgrid' (messaging, contact management) tools are cross-authorized, agents can synthesize severe data exfiltration and information-harvesting workflows that bypass all intra-server checks. The primary risk is that an agent can autonomously extract confidential database records and exfiltrate them to any email address globally, or use harvested internal contacts for unsanctioned communications. Such chains enable covert boundary-breaking workflows invisible to per-tool or per-server governance.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Neither the postgres tool (read-only queries) nor the sendgrid tools (messaging, contact operations) appear dangerous alone, but together they allow automated, agent-driven theft of database contents via outbound email.",
+    "No individual tool exposes bulk contact harvesting or mass messaging of extracted (possibly private or unapproved) contact lists—only the combination crosses this line.",
+    "Human-in-the-loop approval focused on isolated tool usage will miss the emergent cross-server attack chains."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion: Do not authorize both 'query' from postgres and any SendGrid egress tools ('send_email', 'send_to_list', 'add_contact') in the same agent session.",
+    "Implement session-level capability tracking: Detect and block agent workflows that first extract DB data then use outbound email or contact-import tools.",
+    "Apply outbound communication DLP (Data Loss Prevention): Inspect agent-sent emails for database-like payloads/content.",
+    "Require justification and explicit approval for any bulk contact import events, especially if sourced programmatically from databases.",
+    "If business use case mandates joint access, ensure strict post-processing review of email content and audit trails for data flows from DB to outbound channels."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "In the same agent session, do not allow both data extraction from postgres ('query') and cross-domain message sending/imports in sendgrid ('send_email', 'send_to_list', 'add_contact'). Session-level mutual exclusion must be enforced.",
+    "All agent-sent emails through sendgrid must pass DLP/content inspection for structured data leaks.",
+    "Flag and review all workflow sequences where new contacts in sendgrid originate from recently queried DB records."
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "read_file",
+      "risk_summary": "Read contents from files and URLs, supports PDF, Excel, DOCX, images. Partial reading with offset/length.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "write_file",
+      "risk_summary": "Write or append to file contents. Supports text, Excel, DOCX creation.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "edit_block",
+      "risk_summary": "Apply surgical edits to files using find/replace. Supports text, Excel, DOCX.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "read_multiple_files",
+      "risk_summary": "Read contents of multiple files simultaneously.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "create_directory",
+      "risk_summary": "Create a new directory or ensure a directory exists.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "list_directory",
+      "risk_summary": "Get detailed listing of all files and directories with depth control.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "move_file",
+      "risk_summary": "Move or rename files and directories.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "get_file_info",
+      "risk_summary": "Retrieve detailed metadata about a file or directory.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "start_process",
+      "risk_summary": "Start a new terminal process with intelligent state detection. Primary tool for executing commands and running code.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "interact_with_process",
+      "risk_summary": "Send input to a running process and receive the response. Used for REPL interaction.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "read_process_output",
+      "risk_summary": "Read output from a running process with pagination.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "force_terminate",
+      "risk_summary": "Force terminate a running terminal session.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "list_sessions",
+      "risk_summary": "List all active terminal sessions.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "list_processes",
+      "risk_summary": "List all running processes with CPU and memory usage.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "kill_process",
+      "risk_summary": "Terminate a running process by PID.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "start_search",
+      "risk_summary": "Start a streaming file or content search with progressive results.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "get_more_search_results",
+      "risk_summary": "Get more results from an active search with pagination.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "stop_search",
+      "risk_summary": "Stop an active search.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "write_pdf",
+      "risk_summary": "Create a new PDF file or modify an existing one from markdown content.",
+      "risk_level": "Medium"
+    }
+  ],
+  "overall_risk_score": "High",
+  "action": "ALLOW"
+}

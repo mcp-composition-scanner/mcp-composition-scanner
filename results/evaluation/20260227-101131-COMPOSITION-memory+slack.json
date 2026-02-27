@@ -1,0 +1,371 @@
+{
+  "servers_analyzed": [
+    "memory",
+    "slack"
+  ],
+  "total_tools": 17,
+  "pairwise_combinations": 136,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "create_entities",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_relations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_observations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_entities",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_observations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_relations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_graph",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_nodes",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "open_nodes",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_list_channels",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_post_message",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_reply_to_thread",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_add_reaction",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_channel_history",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_thread_replies",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_users",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_user_profile",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "read_graph",
+      "tool_a_server": "memory",
+      "tool_b": "slack_post_message",
+      "tool_b_server": "slack",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous exfiltration and broadcast of sensitive knowledge graph contents into any Slack channel, enabling unsanctioned disclosure of structured org data.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "A model uses 'read_graph' to extract all knowledge graph contents, then formats and posts them via 'slack_post_message' into a chosen Slack channel (possibly public). Neither tool alone enables exfil — only composition allows sensitive information flow from the private memory graph to a potentially broad audience.",
+      "is_cross_server": true,
+      "environment_conditions": "Slack integration is allowed and agent can access both memory and Slack in the same session. No content filtering between outputs and Slack posts.",
+      "existing_governance_gap": "Per-server review sees 'read_graph' as just internal data access and 'slack_post_message' as normal comms. The combo enables organization-wide data leakage, which neither server's tool list reveals in isolation."
+    },
+    {
+      "id": "S2",
+      "tool_a": "search_nodes",
+      "tool_a_server": "memory",
+      "tool_b": "slack_reply_to_thread",
+      "tool_b_server": "slack",
+      "additional_tools": [],
+      "emergent_capability": "Covert, targetable exfiltration of knowledge graph search results into specific Slack conversations, blending sensitive outputs into legitimate ongoing discussions.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "The model searches for sensitive nodes (e.g., containing password, salary info, competitor projects) and uses 'slack_reply_to_thread' to insert those results into relevant Slack threads. This is more covert than generic channel posting and can target specific users or groups.",
+      "is_cross_server": true,
+      "environment_conditions": "Threads and permissions allow posting messages with generated content.",
+      "existing_governance_gap": "Per-tool/server review assumes searches are internal and replies are conversational. Reasoning model can connect them to leak data with context-aware targeting."
+    },
+    {
+      "id": "S3",
+      "tool_a": "read_graph",
+      "tool_a_server": "memory",
+      "tool_b": "slack_get_users",
+      "tool_b_server": "slack",
+      "additional_tools": [
+        "slack_post_message"
+      ],
+      "emergent_capability": "Automated spear-phishing or targeting: model reads org knowledge, enumerates users, and crafts tailored Slack messages to individuals, leveraging internal info for social engineering.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "Medium",
+      "reasoning": "The reasoning model uses 'read_graph' to find sensitive info (org structure, projects), 'slack_get_users' to enumerate targets, and 'slack_post_message' to contact each user individually with custom content.",
+      "is_cross_server": true,
+      "environment_conditions": "Slack allows direct messaging to users; no outbound intent filtering.",
+      "existing_governance_gap": "Listing users and reading graphs are benign apart; but together enable targeted social engineering, which the tool/service boundaries hide."
+    },
+    {
+      "id": "S4",
+      "tool_a": "add_observations",
+      "tool_a_server": "memory",
+      "tool_b": "slack_get_channel_history",
+      "tool_b_server": "slack",
+      "additional_tools": [],
+      "emergent_capability": "Feedback loop: model observes Slack channel behavior and writes selected observations back into the org knowledge graph, forming a persistent org-wide memory of Slack activity not visible to Slack admins.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "Medium",
+      "reasoning": "The model monitors Slack discussions, filters for key information (meeting agreements, escalations), and persists this as knowledge graph facts. These records can be queried or used long after Slack retention would expire.",
+      "is_cross_server": true,
+      "environment_conditions": "Unrestricted read/write access to both memory graph and Slack log APIs.",
+      "existing_governance_gap": "Memory tools appear internal, Slack log access is considered monitoring, but their combination enables durable surveillance, bypassing Slack retention/audit policies."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Automated graph-to-Slack data exfiltration",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Model invokes memory/read_graph, extracting the entire knowledge graph including sensitive org data.",
+        "Model formats this data for readability in Slack.",
+        "Model uses slack/slack_post_message to post data into a public or specified Slack channel."
+      ],
+      "final_capability": "Mass unsanctioned disclosure of organization knowledge graph to all Slack users.",
+      "severity": "High",
+      "human_approval_bypass": "Each step (reading graph, posting message) appears routine; only the sensitive content makes exfil apparent, which is invisible outside model context.",
+      "mitigation": "Enforce session-level or per-output content inspection for sensitive information flowing from memory outputs into Slack messages. Mutual exclusion of read_graph and slack_post_message for unprivileged sessions."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Targeted exfiltration via thread replies",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Model searches for sensitive nodes in the memory graph using memory/search_nodes.",
+        "Model identifies relevant ongoing discussions in Slack via threads.",
+        "Model uses slack/slack_reply_to_thread to insert sensitive information, targeting contextually relevant conversations."
+      ],
+      "final_capability": "Covert leakage of sensitive org/project data to targeted Slack subgroups.",
+      "severity": "High",
+      "human_approval_bypass": "Both searching and replying to threads look benign. The model's intent to leak info is not manifest in stepwise tool use.",
+      "mitigation": "Session-based content flow controls; alert on knowledge graph content crossing into Slack unless policy-approved."
+    },
+    {
+      "chain_id": "C3",
+      "name": "User-targeted phishing using internal context",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Model reads internal org/project data via memory/read_graph.",
+        "Model lists all users with slack/slack_get_users.",
+        "Model crafts and sends personalized messages to users with slack/slack_post_message."
+      ],
+      "final_capability": "Fully automated internal spear-phishing, leveraging deep knowledge graph context.",
+      "severity": "Medium",
+      "human_approval_bypass": "Individual steps look like data access or legitimate messaging. Model intent is not apparent in sequence.",
+      "mitigation": "Limit model output-to-message flows for sensitive fields; monitor bulk direct messages triggered by model."
+    },
+    {
+      "chain_id": "C4",
+      "name": "Org-wide behavioral surveillance with persistent memory",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "Model fetches recent Slack channel activity via slack/slack_get_channel_history.",
+        "Model parses out behavioral signals (e.g., patterns of escalation, consensus).",
+        "Model persists selected findings as new observations with memory/add_observations."
+      ],
+      "final_capability": "Persistent, cross-org surveillance of Slack without audit trail.",
+      "severity": "Medium",
+      "human_approval_bypass": "Each step is innocuous, but enables durable, undisclosed monitoring.",
+      "mitigation": "Log and limit cross-system transfer of Slack behavioral analytics into persistent org memory."
+    }
+  ],
+  "cross_server_risk_summary": "Major risks arise when memory tools (internal organizational knowledge, relationships, or sensitive internal project data) are composed with Slack tools (external/internal broadcast messaging, channel/thread-level targeting, user enumeration). This enables automated, large-scale exfiltration and targeted surveillance, capabilities wholly invisible to per-server tool review.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Neither memory nor slack server exposes an exfiltration vector in isolation; only cross-server composition turns internal, high-trust knowledge graph read/write tools into exfiltration and surveillance enablers.",
+    "Targeted social engineering and internal surveillance (e.g., persistent memory of Slack behaviors) are not possible from any single tool, and thus bypass per-server authorizations.",
+    "Human-in-the-loop reviewers do not see the model's composite intent, only stepwise benign actions."
+  ],
+  "recommendations": [
+    "Mutual exclusion: Prohibit simultaneous session-level access to both knowledge graph read tools and unrestricted Slack messaging/reply APIs, unless agent/session is highly privileged and monitored.",
+    "Enforce output flow controls: Deploy real-time content filtering or DLP inspection between knowledge graph outputs and Slack messages.",
+    "Monitor for automated bulk/broad channel postings and user-targeted messages during the same agent session.",
+    "Apply session-wide audit logging for all cross-system flows and generate alerts on knowledge-graph-to-Slack content paths.",
+    "Limit agent autonomy in composing Slack messages when any sensitive internal data has been accessed in the session.",
+    "Require model output inspection or human review when knowledge graph information is about to be transmitted to Slack."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "No session may invoke both memory knowledge graph read (read_graph/search_nodes/open_nodes) and any Slack messaging/posting capability (slack_post_message/slack_reply_to_thread) unless subject to content DLP filtering.",
+    "Session-level logging of all transfers between knowledge graph outputs and Slack should be enforced for audit.",
+    "Bulk direct-messaging or posting to more than 5 (customizable threshold) Slack users/channels within a session that accessed knowledge graph data should be blocked or require explicit approval."
+  ]
+}

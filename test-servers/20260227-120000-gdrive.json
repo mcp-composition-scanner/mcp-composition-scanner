@@ -1,0 +1,31 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "gdrive_search",
+      "risk_summary": "Search for files in Google Drive with query.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "gdrive_read_file",
+      "risk_summary": "Read contents of file from Google Drive by file ID.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "gsheets_read",
+      "risk_summary": "Read data from Google Spreadsheet with range and formatting options.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "gsheets_write",
+      "risk_summary": "Write or update data in Google Sheets cells.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "gdrive_list_files",
+      "risk_summary": "List files in Google Drive with pagination.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Low",
+  "action": "ALLOW"
+}

@@ -1,0 +1,94 @@
+Collecting tools from result files...
+  ✓ sqlite (from file): 8 tools extracted
+  ✓ gdrive (from file): 5 tools extracted
+
+▶ Running composition analysis on 13 tools from 2 servers...
+  Pairwise search space: 78 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    sqlite, gdrive
+  Tools:      13
+  Pairs:      78
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 4
+
+  [S1] High [CROSS-SERVER]
+    Tools: read_records (sqlite) ⊕ gsheets_write (gdrive)
+    Emergent: Exfiltration of arbitrary database query results from internal SQLite DB to external Google Sheets controlled by attacker.
+    Class: DataExfiltration
+    Environment: Requires agent-level access to both servers, Google account for gsheets_write configured with wide sharing, and no egress filtering (since Drive API is network-based).
+    Gap: Per-server review for sqlite sees no egress mechanism, so risk is judged low. Per-server review for gdrive only allows writing sheets with authorized credentials, but has no understanding of sensitive internal data context. Composition allows egress path not evident in isolated review.
+
+  [S2] High [CROSS-SERVER]
+    Tools: gsheets_read (gdrive) ⊕ create_record (sqlite)
+    Emergent: Autonomous ingestion of attacker-controlled data from Google Sheets into internal database, bypassing normal vetted import channels.
+    Class: SupplyChainModification
+    Environment: Requires both tool authorizations; potential for abuse if Google Sheets is editable or shareable by external users.
+    Gap: Per-server check for create_record only considers local API use; per-server check for gsheets_read expects read-only Drive access. The combination creates a data ingestion channel potentially controlled by an external party.
+
+  [S3] High [CROSS-SERVER]
+    Tools: read_records (sqlite) ⊕ gdrive_read_file (gdrive)
+    + gsheets_write
+    Emergent: Indirect exfiltration or cross-leakage of internal DB records by combining readings from DB and content from files, then writing a combined, potentially enriched data set to Google Sheets or Drive.
+    Class: DataExfiltration
+    Environment: Requires all three authorizations and no data loss prevention filtering between AI agent and gdrive.
+    Gap: Per-tool review of each step looks benign: data read, data also accessed from Drive, data written to Google Sheets. But model can autonomously combine DB and Drive data for unauthorized export, invisible except in full composition.
+
+  [S4] Critical [CROSS-SERVER]
+    Tools: query (sqlite) ⊕ gsheets_write (gdrive)
+    + gdrive_search
+    Emergent: Automated discovery and export of all internal database contents to attacker-controlled cloud locations.
+    Class: DataExfiltration
+    Environment: No sandboxing or egress controls. Effectively only limited by gdrive account scope/permissions.
+    Gap: Tool reviews would see 'complex query' or 'Sheet write' as benign individually. Full exfiltration path is only visible at the composition layer, as the model can abuse general-purpose query and external write in an attack chain.
+
+  ⚠ ATTACK CHAINS: 4
+
+  [C1] DB Exfil via Google Sheets — High
+    Final capability: Database contents leaked to a 3rd-party Google account.
+    Approval bypass: Each step looks legitimate: 'reading data', 'formatting', 'writing to user-owned sheet'. No step in isolation signals exfiltration.
+    Step 1: 1. Use `read_records` to extract sensitive records from internal SQLite database.
+    Step 2: 2. Format extracted records for Google Sheets.
+    Step 3: 3. Use `gsheets_write` to write the results into a Google Sheet under the attacker's Drive.
+
+  [C2] Supply Chain Pollution via Sheets Injection — High
+    Final capability: Arbitrary, unvetted data is ingested into internal records, potentially altering business logic or introducing malicious payloads.
+    Approval bypass: Each tool appears to operate on allowed data sources. The fact that the data's origin is untrusted is lost unless cross-tool context is tracked.
+    Step 1: 1. `gsheets_read` reads data from an attacker-controlled or externally shared Google Sheet.
+    Step 2: 2. Parse or transform the data as needed.
+    Step 3: 3. `create_record` writes the foreign data into the internal SQLite DB.
+
+  [C3] Chained Exfil/Enrich/Export — High
+    Final capability: Stealthy export of custom information product based on sensitive internal and cloud data.
+    Approval bypass: Each read or write operation looks routine. Only the composition context reveals exfil intent.
+    Step 1: 1. Use `read_records` to select specific internal records.
+    Step 2: 2. Use `gdrive_read_file` to pull reference data or templates.
+    Step 3: 3. Combine, enrich, or obfuscate the results.
+    Step 4: 4. Use `gsheets_write` to export the final data product externally.
+
+  [C4] Autonomous DB Dump and Export — Critical
+    Final capability: Complete internal database dump exported from core infrastructure to external cloud.
+    Approval bypass: SQL query and Sheet writing each appear justified individually; only combined do they constitute mass exfiltration.
+    Step 1: 1. Use `query` to dump all tables (arbitrary SQL).
+    Step 2: 2. Use `gdrive_search` to find or create destination Sheets/drives.
+    Step 3: 3. Use `gsheets_write` to upload massive dataset to external location.
+
+  GOVERNANCE BLIND SPOTS:
+    • Per-server review on sqlite sees no egress, while gdrive does not see data originating from sensitive sources.
+    • Both ingest and exfil chains are invisible unless tool compositions are explicitly analyzed: reads and writes appear legitimate until analyzed together.
+    • Automated reasoning models can bridge internal data to external cloud assets, defeating classic sandbox boundaries.
+
+  RECOMMENDED CONSTRAINTS:
+    • Disallow any session or agent-level co-invocation of: (sqlite.read_records OR sqlite.query) AND gdrive.gsheets_write.
+    • Mutual exclusion: Sessions with access to SQLite DB read/query must not also gain write access to Google Sheets or Drive.
+    • Require human review and explicit approval after cross-server data movement is detected.
+    • Log and alert on any data flow from DB reads/queries to cloud write endpoints.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100810-COMPOSITION-sqlite+gdrive.json

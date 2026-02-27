@@ -1,0 +1,46 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "slack_list_channels",
+      "risk_summary": "List public channels in the workspace with pagination.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "slack_post_message",
+      "risk_summary": "Post a new message to a Slack channel.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "slack_reply_to_thread",
+      "risk_summary": "Reply to a specific message thread in Slack.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "slack_add_reaction",
+      "risk_summary": "Add a reaction emoji to a message.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "slack_get_channel_history",
+      "risk_summary": "Get recent messages from a channel.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "slack_get_thread_replies",
+      "risk_summary": "Get all replies in a message thread.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "slack_get_users",
+      "risk_summary": "Get list of all users in the workspace.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "slack_get_user_profile",
+      "risk_summary": "Get detailed profile information for a specific user.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Medium",
+  "action": "ALLOW"
+}

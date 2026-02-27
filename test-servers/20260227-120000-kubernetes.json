@@ -1,0 +1,26 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "kubectl",
+      "risk_summary": "Execute Kubernetes CLI commands for cluster management (pods, deployments, services, secrets, configmaps).",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "helm",
+      "risk_summary": "Execute Helm package manager commands for Kubernetes deployment.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "istioctl",
+      "risk_summary": "Execute Istio service mesh management commands.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "argocd",
+      "risk_summary": "Execute ArgoCD GitOps continuous deployment commands.",
+      "risk_level": "High"
+    }
+  ],
+  "overall_risk_score": "High",
+  "action": "ALLOW"
+}

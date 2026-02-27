@@ -1,0 +1,545 @@
+{
+  "servers_analyzed": [
+    "slack",
+    "github"
+  ],
+  "total_tools": 33,
+  "pairwise_combinations": 528,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "slack_list_channels",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_post_message",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_reply_to_thread",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_add_reaction",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_channel_history",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_thread_replies",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_users",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "Authentication",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "slack_get_user_profile",
+      "server_origin": "slack",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "Authentication",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_or_update_file",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_repositories",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_repository",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_file_contents",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "push_files",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_issue",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_pull_request",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "fork_repository",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_branch",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_commits",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_issues",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_issue",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_issue_comment",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_code",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_issues",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_users",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Authentication",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_issue",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_pull_requests",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_pull_request_review",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "merge_pull_request",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request_files",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request_status",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_pull_request_branch",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request_comments",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "slack_get_channel_history",
+      "tool_a_server": "slack",
+      "tool_b": "create_or_update_file",
+      "tool_b_server": "github",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous, unsupervised transfer of potentially sensitive Slack discussions into a persistent, version-controlled GitHub repository.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "slack_get_channel_history can extract conversation logs (possibly with confidential data) from Slack. create_or_update_file (or push_files) on GitHub allows the agent to store any file, including extracted Slack logs, in a GitHub repo. This chain enables autonomous and silent transfer of internal Slack communication to GitHub with no native audit trail on the Slack side. Neither server, in isolation, allows for this exfiltration.",
+      "is_cross_server": true,
+      "environment_conditions": "No network egress constraint needed. Agent memory suffices to transfer data between invocations.",
+      "existing_governance_gap": "Slack reviewers see only message read permissions; GitHub reviewers see only file write. Only the composition allows Slack data to arrive in GitHub."
+    },
+    {
+      "id": "S2",
+      "tool_a": "get_file_contents",
+      "tool_a_server": "github",
+      "tool_b": "slack_post_message",
+      "tool_b_server": "slack",
+      "additional_tools": [],
+      "emergent_capability": "Automated dissemination of sensitive repo content or secret code from GitHub onto arbitrary Slack channels, potentially causing leakage or misinformation.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "get_file_contents can extract any file's contents from a GitHub repo, including secrets, credentials, or code. slack_post_message can then autonomously broadcast this content to any Slack channel, spreading the data to all channel participants or enabling phishing/spearphishing attacks. Neither tool alone provides this cross-domain leak.",
+      "is_cross_server": true,
+      "environment_conditions": "No special environment constraints; agent's memory/context enables cross-tool data flow.",
+      "existing_governance_gap": "GitHub reviewers do not see risk of Slack dissemination; Slack reviewers do not see origin of data."
+    },
+    {
+      "id": "S3",
+      "tool_a": "slack_get_users",
+      "tool_a_server": "slack",
+      "tool_b": "search_users",
+      "tool_b_server": "github",
+      "additional_tools": [],
+      "emergent_capability": "Correlating workspace members’ real-world identities between Slack and GitHub for reconnaissance or social engineering.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "Medium",
+      "reasoning": "slack_get_users/slack_get_user_profile reveals names, usernames, emails of Slack users. search_users on github can search for correlated info, mapping Slack <-> GitHub identities. This enables targeting or deanonymization not possible by either tool alone.",
+      "is_cross_server": true,
+      "environment_conditions": "No special constraints. Enhanced risk if workspace emails are public.",
+      "existing_governance_gap": "Slack and GitHub reviewers each see only identity queries in their own domain, missing the deanonymization when tools are composed."
+    },
+    {
+      "id": "S4",
+      "tool_a": "slack_post_message",
+      "tool_a_server": "slack",
+      "tool_b": "create_issue",
+      "tool_b_server": "github",
+      "additional_tools": [],
+      "emergent_capability": "Coordinated spam or misinformation campaigns across Slack and GitHub in tandem (agent writes on both platforms in synchrony, amplifying possible abuse).",
+      "emergent_capability_class": "Messaging",
+      "severity": "Medium",
+      "reasoning": "Each tool alone is only a basic writer. Chained, a malicious agent can orchestrate coordinated posts on both Slack and GitHub, increasing reach and operational tempo.",
+      "is_cross_server": true,
+      "environment_conditions": "No special egress or sandbox constraints; risk heightens if combined with scheduling or command code injection.",
+      "existing_governance_gap": "Each server authorizes outbound messaging w/o knowledge of volume or inter-platform message coordination."
+    },
+    {
+      "id": "S5",
+      "tool_a": "slack_get_channel_history",
+      "tool_a_server": "slack",
+      "tool_b": "search_code",
+      "tool_b_server": "github",
+      "additional_tools": [],
+      "emergent_capability": "Reconnaissance chain: Agent correlates Slack conversations about error messages or code with public/internal GitHub codebase, to identify vulnerabilities, credentials, or sensitive code discussed in chat and present in code repositories.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "Medium",
+      "reasoning": "By extracting keywords or code fragments from Slack conversations, the agent can search code on GitHub to tie chat references to code artifacts, enhancing reconnaissance and vulnerability mapping.",
+      "is_cross_server": true,
+      "environment_conditions": "No special environment conditions.",
+      "existing_governance_gap": "Slack reviewers do not foresee use of extracted channel text for code search; GitHub reviewers do not see Slack-origin triggers for code search."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "A1",
+      "name": "Slack-to-GitHub Data Exfiltration Chain",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Agent uses slack_get_channel_history to extract recent chat logs (which may contain sensitive data).",
+        "Agent autonomously uses create_or_update_file or push_files to insert a record of the chat data into a GitHub repository under its control."
+      ],
+      "final_capability": "Exfiltration of sensitive Slack discussions to a remote, version-controlled system.",
+      "severity": "High",
+      "human_approval_bypass": "Each step appears benign: retrieving chat history is a routine audit/read action; updating a file in GitHub is a common developer operation. The chain linking the two—the exfiltration—is invisible unless both tool invocations are monitored jointly.",
+      "mitigation": "Apply mutual exclusion: disallow sessions in which both Slack message retrieval and GitHub file upload tools can be used. Alternately, require explicit in-context justification and prompt human review if Slack data moves to GitHub. Employ session-level DLP monitoring."
+    },
+    {
+      "chain_id": "A2",
+      "name": "GitHub-to-Slack Data Leak Chain",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Agent uses get_file_contents to obtain a file from a private or sensitive GitHub repository.",
+        "Agent uses slack_post_message to broadcast the retrieved file—or select fragments—into one or more Slack channels."
+      ],
+      "final_capability": "Unauthorized dissemination of repository content to Slack channels.",
+      "severity": "High",
+      "human_approval_bypass": "Fetching repo files and posting messages each seem normal in isolation. Linkage between GitHub source and Slack destination is non-obvious to tool reviewers.",
+      "mitigation": "Block co-selection of GitHub file read and Slack posting tools in the same session. If both are authorized, require DLP-style policy enforcement and possible moderator review."
+    },
+    {
+      "chain_id": "A3",
+      "name": "Identity Correlation and Targeting",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Agent uses slack_get_users or slack_get_user_profile to enumerate workspace users and collect identifying information.",
+        "Agent uses search_users on GitHub to correlate these Slack identities with GitHub accounts, building cross-platform dossiers."
+      ],
+      "final_capability": "Cross-platform identity and social engineering targeting.",
+      "severity": "Medium",
+      "human_approval_bypass": "Identity lookup on each platform is routine; correlation between platforms is not monitored in classical governance.",
+      "mitigation": "Detect and flag bulk identity queries that link across more than one platform in a session. Optionally block direct access to user directory APIs in both domains."
+    },
+    {
+      "chain_id": "A4",
+      "name": "Cross-Platform Coordinated Spam",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "Agent crafts a message payload.",
+        "Agent posts the payload as a Slack message using slack_post_message.",
+        "Agent posts the same (or tailored) payload as a GitHub issue (create_issue) to maximize coverage."
+      ],
+      "final_capability": "Coordinated outbound spam/misinformation across organizational surface area.",
+      "severity": "Medium",
+      "human_approval_bypass": "Platform-native reviewers see only same-domain messaging activity. Cross-system simultaneity is not apparent.",
+      "mitigation": "Enforce rate limiting and volume caps on combined cross-platform messaging. Require session-level review for coordinated multi-target campaigns."
+    },
+    {
+      "chain_id": "A5",
+      "name": "Slack Reconnaissance for Codebase Attack",
+      "composition_surpluses_used": [
+        "S5"
+      ],
+      "steps": [
+        "Agent uses slack_get_channel_history to extract recent conversations about errors, credentials, or code.",
+        "Agent uses search_code on GitHub, seeding searches with keywords or code fragments found in Slack, to map Slack-discussed vulnerabilities to actual code artefacts."
+      ],
+      "final_capability": "Automated reconnaissance for vulnerability discovery through Slack–>GitHub information crosslinking.",
+      "severity": "Medium",
+      "human_approval_bypass": "Text search on each platform is routine. The agent's ability to connect the two is overlooked by per-tool reviewers.",
+      "mitigation": "Monitor for correlated content access spanning Slack conversations and matching GitHub code search. Consider restricting access to both Slack channel logs and code search APIs in the same session."
+    }
+  ],
+  "cross_server_risk_summary": "Allowing an agent to access both Slack (message/channel read/write, user identity) and GitHub (repo/code read/write, issues) APIs in a session creates multiple data exfiltration, surveillance, and attack composition pathways. Serious risks include autonomous leakage of internal Slack discussions to GitHub repos or vice versa, cross-platform doxxing/social engineering via identity correlation, and coordinated multi-surface spam/misinformation campaigns. These are invisible to per-server or per-tool review; they emerge only in cross-server composition.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Slack and GitHub reviewers see only in-domain permissions. Neither sees the ability of the other platform to accept exported/imported data, enabling silent data exfiltration.",
+    "Coordination of spam/misinformation effort across both Slack and GitHub is invisible to per-platform rate limits or abuse monitoring.",
+    "Identity and reconnaissance links built by correlating Slack user profiles with GitHub accounts enable targeted attacks not visible to either reviewer.",
+    "Reconnaissance chains leveraging Slack channel logs to trigger targeted code searches in GitHub are enabled only by global agent context.",
+    "Session-level invocation linking and agent cross-memory is not covered by current per-tool authorization models."
+  ],
+  "recommendations": [
+    "Apply mutual exclusion constraints: Do not allow Slack channel read tools and GitHub file/write tools in the same agent session.",
+    "Require session-level DLP enforcement—alerting if Slack data is present in any GitHub write payload, and vice versa.",
+    "Monitor and flag concurrent posting of similar or matching content to both Slack and GitHub within a close time window.",
+    "Apply rate limiting and bulk access controls to user-directory read operations, especially if both platforms are accessible in the same session.",
+    "Clearly log, alert, and prompt for human approval if agent sessions use tools spanning both platforms in risky compositions; consider default deny unless explicitly justified.",
+    "Harden agent sandbox to prevent exporting of cross-domain identity or bulk message data.",
+    "Regularly audit session-level agent tool invocation graphs for risk-patterns such as cross-domain data flows or correlated identity lookups."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Mutual exclusion: Slack message read (e.g., slack_get_channel_history) and GitHub file write (e.g., create_or_update_file, push_files) tools must not be accessible within the same agent session.",
+    "If both Slack read and GitHub write are ever permitted, require explicit session-level DLP scanning on all file payloads and alert on Slack-origin strings.",
+    "Bulk access to user-directory/search on both Slack and GitHub triggers a human review checkpoint.",
+    "Slack message write and GitHub issue/posting tools can be granted together only under volume and frequency caps, with automatic alerting for cross-platform coordinated content.",
+    "Require logging and alerting on any session that invokes more than one cross-domain tool in the same user/agent context."
+  ]
+}

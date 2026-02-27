@@ -1,0 +1,354 @@
+{
+  "servers_analyzed": [
+    "sqlite",
+    "gdrive"
+  ],
+  "total_tools": 13,
+  "pairwise_combinations": 78,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "db_info",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_tables",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_table_schema",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_record",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_records",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_records",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_records",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "query",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "gdrive_search",
+      "server_origin": "gdrive",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Surveillance",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "gdrive_read_file",
+      "server_origin": "gdrive",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "gsheets_read",
+      "server_origin": "gdrive",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "gsheets_write",
+      "server_origin": "gdrive",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "gdrive_list_files",
+      "server_origin": "gdrive",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Surveillance",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "read_records",
+      "tool_a_server": "sqlite",
+      "tool_b": "gsheets_write",
+      "tool_b_server": "gdrive",
+      "additional_tools": [],
+      "emergent_capability": "Exfiltration of arbitrary database query results from internal SQLite DB to external Google Sheets controlled by attacker.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "A model can query sensitive data from the internal SQLite database using read_records, then use gsheets_write to write those query results into a Google Sheet. This Google Sheet is potentially accessible to any user with access to the linked Google Drive account, circumventing organizational data boundaries. Neither server alone allows data egress: the SQLite tools cannot leave the boundary, and gdrive tools cannot access the DB. Combined, a model can bridge the data out.",
+      "is_cross_server": true,
+      "environment_conditions": "Requires agent-level access to both servers, Google account for gsheets_write configured with wide sharing, and no egress filtering (since Drive API is network-based).",
+      "existing_governance_gap": "Per-server review for sqlite sees no egress mechanism, so risk is judged low. Per-server review for gdrive only allows writing sheets with authorized credentials, but has no understanding of sensitive internal data context. Composition allows egress path not evident in isolated review."
+    },
+    {
+      "id": "S2",
+      "tool_a": "gsheets_read",
+      "tool_a_server": "gdrive",
+      "tool_b": "create_record",
+      "tool_b_server": "sqlite",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous ingestion of attacker-controlled data from Google Sheets into internal database, bypassing normal vetted import channels.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "High",
+      "reasoning": "An agent can read any data from a Google Sheet via gsheets_read (potentially populated by an attacker) and use create_record to insert it into the organization's SQLite DB, introducing data that was never vetted, potentially planting malicious payloads (malformed records, exploit strings, etc).",
+      "is_cross_server": true,
+      "environment_conditions": "Requires both tool authorizations; potential for abuse if Google Sheets is editable or shareable by external users.",
+      "existing_governance_gap": "Per-server check for create_record only considers local API use; per-server check for gsheets_read expects read-only Drive access. The combination creates a data ingestion channel potentially controlled by an external party."
+    },
+    {
+      "id": "S3",
+      "tool_a": "read_records",
+      "tool_a_server": "sqlite",
+      "tool_b": "gdrive_read_file",
+      "tool_b_server": "gdrive",
+      "additional_tools": [
+        "gsheets_write"
+      ],
+      "emergent_capability": "Indirect exfiltration or cross-leakage of internal DB records by combining readings from DB and content from files, then writing a combined, potentially enriched data set to Google Sheets or Drive.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "read_records can pull sensitive database content; gdrive_read_file can pull files from Drive (possibly as decoys, characterization, or aggregation), and gsheets_write can send arbitrary combined outputs to an external Google resource. Model can structure complex, deniable exfil chains with plausible intermediate steps.",
+      "is_cross_server": true,
+      "environment_conditions": "Requires all three authorizations and no data loss prevention filtering between AI agent and gdrive.",
+      "existing_governance_gap": "Per-tool review of each step looks benign: data read, data also accessed from Drive, data written to Google Sheets. But model can autonomously combine DB and Drive data for unauthorized export, invisible except in full composition."
+    },
+    {
+      "id": "S4",
+      "tool_a": "query",
+      "tool_a_server": "sqlite",
+      "tool_b": "gsheets_write",
+      "tool_b_server": "gdrive",
+      "additional_tools": [
+        "gdrive_search"
+      ],
+      "emergent_capability": "Automated discovery and export of all internal database contents to attacker-controlled cloud locations.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "Model uses query for arbitrary SQL (possibly including full DB dumps), gdrive_search to locate/organize writable Drive or Sheets locations, and gsheets_write to bulk upload sensitive information. The autonomy and search step give the agent unbounded egress and lateral movement.",
+      "is_cross_server": true,
+      "environment_conditions": "No sandboxing or egress controls. Effectively only limited by gdrive account scope/permissions.",
+      "existing_governance_gap": "Tool reviews would see 'complex query' or 'Sheet write' as benign individually. Full exfiltration path is only visible at the composition layer, as the model can abuse general-purpose query and external write in an attack chain."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "DB Exfil via Google Sheets",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "1. Use `read_records` to extract sensitive records from internal SQLite database.",
+        "2. Format extracted records for Google Sheets.",
+        "3. Use `gsheets_write` to write the results into a Google Sheet under the attacker's Drive."
+      ],
+      "final_capability": "Database contents leaked to a 3rd-party Google account.",
+      "severity": "High",
+      "human_approval_bypass": "Each step looks legitimate: 'reading data', 'formatting', 'writing to user-owned sheet'. No step in isolation signals exfiltration.",
+      "mitigation": "Restrict gsheets_write access or require explicit egress approval for data sourced from protected assets (DB). Enforce mutual exclusion or data flow tracking."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Supply Chain Pollution via Sheets Injection",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "1. `gsheets_read` reads data from an attacker-controlled or externally shared Google Sheet.",
+        "2. Parse or transform the data as needed.",
+        "3. `create_record` writes the foreign data into the internal SQLite DB."
+      ],
+      "final_capability": "Arbitrary, unvetted data is ingested into internal records, potentially altering business logic or introducing malicious payloads.",
+      "severity": "High",
+      "human_approval_bypass": "Each tool appears to operate on allowed data sources. The fact that the data's origin is untrusted is lost unless cross-tool context is tracked.",
+      "mitigation": "Disallow cross-system ingestion without data provenance tracing. Require explicit validation before external data writes into the DB."
+    },
+    {
+      "chain_id": "C3",
+      "name": "Chained Exfil/Enrich/Export",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "1. Use `read_records` to select specific internal records.",
+        "2. Use `gdrive_read_file` to pull reference data or templates.",
+        "3. Combine, enrich, or obfuscate the results.",
+        "4. Use `gsheets_write` to export the final data product externally."
+      ],
+      "final_capability": "Stealthy export of custom information product based on sensitive internal and cloud data.",
+      "severity": "High",
+      "human_approval_bypass": "Each read or write operation looks routine. Only the composition context reveals exfil intent.",
+      "mitigation": "Monitor for cross-boundary data flows; enforce session-level egress policy."
+    },
+    {
+      "chain_id": "C4",
+      "name": "Autonomous DB Dump and Export",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "1. Use `query` to dump all tables (arbitrary SQL).",
+        "2. Use `gdrive_search` to find or create destination Sheets/drives.",
+        "3. Use `gsheets_write` to upload massive dataset to external location."
+      ],
+      "final_capability": "Complete internal database dump exported from core infrastructure to external cloud.",
+      "severity": "Critical",
+      "human_approval_bypass": "SQL query and Sheet writing each appear justified individually; only combined do they constitute mass exfiltration.",
+      "mitigation": "Harden environment against external write. Require correlation checking of source data for all gdrive_access."
+    }
+  ],
+  "cross_server_risk_summary": "Critical composition risks are present: The combination of SQLite database read or query tools with Google Drive/Sheets write capabilities enables undetectable data exfiltration, data laundering, and ingestion of untrusted supply chain data. None of these risks are visible at the per-server review layer, as neither server independently provides both system-of-record and external egress/import in the same tool set.",
+  "composition_risk_score": "Critical",
+  "governance_blind_spots": [
+    "Per-server review on sqlite sees no egress, while gdrive does not see data originating from sensitive sources.",
+    "Both ingest and exfil chains are invisible unless tool compositions are explicitly analyzed: reads and writes appear legitimate until analyzed together.",
+    "Automated reasoning models can bridge internal data to external cloud assets, defeating classic sandbox boundaries."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion: Do not allow any session to access both SQLite DB read/query and Google Sheets/Drive write APIs.",
+    "Implement context-sensitive authorization: Tool invocations that show data outbound from sensitive trusted sources to external cloud must prompt explicit, multi-step confirmation or be blocked.",
+    "Apply provenance and taint tracking: Data ingested from external (gdrive) sources must be marked untrusted and not inserted into privileged/internal DBs without explicit review.",
+    "Audit all cross-server data flows: Use DLP or similar tools to monitor for illicit bulk data exports.",
+    "Restrict gdrive credentials to least privilege and consider using separate, tightly controlled Drive accounts for any AI-integrated use."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Disallow any session or agent-level co-invocation of: (sqlite.read_records OR sqlite.query) AND gdrive.gsheets_write.",
+    "Mutual exclusion: Sessions with access to SQLite DB read/query must not also gain write access to Google Sheets or Drive.",
+    "Require human review and explicit approval after cross-server data movement is detected.",
+    "Log and alert on any data flow from DB reads/queries to cloud write endpoints."
+  ]
+}

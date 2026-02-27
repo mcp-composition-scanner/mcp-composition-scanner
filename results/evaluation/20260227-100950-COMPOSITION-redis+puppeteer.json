@@ -1,0 +1,465 @@
+{
+  "servers_analyzed": [
+    "redis",
+    "puppeteer"
+  ],
+  "total_tools": 26,
+  "pairwise_combinations": 325,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "set_string",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_string",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "hash_set",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "hash_get",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "hash_delete",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_append",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_pop",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_range",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_add",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_remove",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_members",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "publish",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "subscribe",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "stream_add",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "stream_read",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "json_store",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "json_retrieve",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "json_manipulate",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "server_info",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_navigate",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_screenshot",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Surveillance",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_click",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_fill",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_select",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_hover",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_evaluate",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Execute",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "redis (any data retrieval tools)",
+      "tool_a_server": "redis",
+      "tool_b": "puppeteer_evaluate",
+      "tool_b_server": "puppeteer",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous exfiltration of internal Redis database records to arbitrary external web endpoints via JavaScript execution in the browser.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "A reasoning model can use redis tools (get_string, hash_get, json_retrieve, stream_read, etc.) to pull sensitive data, then use puppeteer_evaluate or puppeteer_fill to script a browser session that sends this data to an external site (e.g., via fetch() in JS, or by filling a form and submitting it). Neither server by itself provides data exfiltration: redis cannot egress; puppeteer alone has no internal data access.",
+      "is_cross_server": true,
+      "environment_conditions": "Requires that browser automation has network access and can execute arbitrary JS (no egress filtering, browser sandbox is not tightly restricted).",
+      "existing_governance_gap": "Per-server review sees redis as an internal data store and puppeteer as browser automation for UI tasks. There’s no apparent exfiltration risk unless these capabilities are cross-combined."
+    },
+    {
+      "id": "S2",
+      "tool_a": "subscribe (redis)",
+      "tool_a_server": "redis",
+      "tool_b": "puppeteer_evaluate",
+      "tool_b_server": "puppeteer",
+      "additional_tools": [],
+      "emergent_capability": "Stealthy, session-persistent surveillance: model subscribes to redis pub/sub channels for sensitive events, and upon trigger, pivots to puppeteer to automate browser actions, take screenshots, or manipulate web content.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "The model can subscribe to channels in redis for specific internal events (like new user logins, transactions, etc.), and when these occur, trigger puppeteer automation to surveil/record browser session content, take screenshots, or script further exfiltration.",
+      "is_cross_server": true,
+      "environment_conditions": "Requires both pub/sub integration and uninterrupted puppeteer access.",
+      "existing_governance_gap": "Independently, redis messaging is purely internal and puppeteer actions are just web automation. Combined, they allow real-time, event-triggered surveillance and data transfer."
+    },
+    {
+      "id": "S3",
+      "tool_a": "json_store/json_manipulate (redis)",
+      "tool_a_server": "redis",
+      "tool_b": "puppeteer_navigate/puppeteer_evaluate",
+      "tool_b_server": "puppeteer",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous data poisoning of web workflows: agent stores malicious payloads or misleading data in redis (upstream of UI), then uses puppeteer to trigger and validate its processing on UI or downstream apps.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "High",
+      "reasoning": "Agent can inject crafted JSON into application data (e.g., stored XSS, workflow manipulation) via redis, then automate UI workflows (navigation, evaluation) to ensure its payload is executed or propagated.",
+      "is_cross_server": true,
+      "environment_conditions": "System must have a shared data flow between redis-backed data and the UI reachable by puppeteer; assumes no sanitization is enforced.",
+      "existing_governance_gap": "Redis JSON manipulation seen as business logic; puppeteer seen as testing/automation. Their combination enables live UI supply chain attacks."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Internal Data Exfiltration via Browser Automation",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Read sensitive data from redis using json_retrieve, get_string, or hash_get.",
+        "Prepare JavaScript payload (with puppeteer_evaluate) that sends this data via fetch() or form to an external endpoint.",
+        "Navigate to a benign site or directly execute the JS to exfiltrate data.",
+        "Optionally validate exfiltration success."
+      ],
+      "final_capability": "Exfiltration of internal system data to arbitrary external destination",
+      "severity": "High",
+      "human_approval_bypass": "Each step appears benign: read data from redis (routine data access); run 'evaluate' in browser (common for UI testing); but the chain is not individually suspicious.",
+      "mitigation": "Enforce network egress filtering in the puppeteer environment or mutual exclusion between redis data access and puppeteer_evaluate tool sessions."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Event-Driven Surveillance or Triggered Exfiltration",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Subscribe to redis pub/sub for sensitive events (e.g., subscribe to login or transaction channel).",
+        "On receiving a trigger event, launch puppeteer actions (e.g., take screenshot, scrape sensitive UI, or start exfiltration chain via puppeteer_evaluate).",
+        "Optionally publish updates or keep event loop running."
+      ],
+      "final_capability": "Stealthy surveillance or targeted exfiltration triggered by internal system events",
+      "severity": "High",
+      "human_approval_bypass": "Subscribing to events is a standard pattern for reactive systems; automating puppeteer in response to events is also routine in testing scenarios.",
+      "mitigation": "Cross-channel access controls; alert or prohibit sessions orchestrating both redis subscribe and puppeteer UI actions."
+    },
+    {
+      "chain_id": "C3",
+      "name": "Automated Supply Chain Poisoning with UI Validation",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Craft and store malicious JSON (e.g., script injection) in redis via json_store/json_manipulate.",
+        "Use puppeteer_navigate to open the affected UI or API endpoint relying on redis data.",
+        "Use puppeteer_evaluate or puppeteer_screenshot to validate/observe effects (e.g. confirm XSS or data/logic manipulation)."
+      ],
+      "final_capability": "Supply chain compromise of web-facing systems by leveraging backend control and UI automation",
+      "severity": "High",
+      "human_approval_bypass": "Writing JSON and automating browser actions seem like normal testing/dev activities, not malicious in isolation.",
+      "mitigation": "Guard against unsanitized data flowing from redis to UI, enforce contextual code-injection scanning, and prohibit joint usage in deployment."
+    }
+  ],
+  "cross_server_risk_summary": "The combination of redis (internal data access, messaging, mutation) and puppeteer (arbitrary browser automation and JS execution) allows an agentic model to bridge the confidentiality boundary between backend/internal data and the outside world. Notable emergent risks include autonomous data exfiltration of any value retrievable from redis to arbitrary external web endpoints, stealthy event-driven surveillance, and supply chain poisoning/validation cycles—all invisible to per-tool or per-server reviews.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Per-tool and per-server reviews see redis as only enabling internal data operations, and puppeteer as a UX testing/automation tool. No single review process would highlight the cross-boundary risk of data exfiltration, surveillance, or direct supply chain poisoning when these are composed.",
+    "Policies that restrict data egress at individual tool or server level fail if browser egress is possible (via puppeteer).",
+    "Event-driven attack chains orchestrated via pub/sub and browser control are not covered by existing reactive controls."
+  ],
+  "recommendations": [
+    "Enforce strong network egress controls for the environment in which puppeteer operates (preferably block all except known/approved destinations).",
+    "Disallow simultaneous or session-coordinated access to both redis data retrieval tools and puppeteer_evaluate within the same session or task.",
+    "Implement contextual logging and automated flagging/mutual exclusion if a session accesses both internal redis and puppeteer tools.",
+    "Require explicit, cross-server threat modeling review before authorizing simultaneous deployment of tools in these classes.",
+    "Sanitize and validate all data written to redis that will be rendered in the web UI, to prevent injection chains.",
+    "Monitor event-driven orchestration across servers for suspicious chains and alert on cross-system automation."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Do not permit sessions to access both redis data extraction tools and puppeteer_evaluate (or any JS-executing puppeteer tool) unless network egress from puppeteer is strictly filtered.",
+    "Trigger security alert/workflow review if redis subscribe/publish and puppeteer automation are combined in the same session.",
+    "Audit for sequences where a session both writes to redis (especially with json_store/manipulate) and then immediately orchestrates puppeteer browser navigation to the affected UI."
+  ]
+}

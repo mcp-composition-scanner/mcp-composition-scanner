@@ -1,0 +1,131 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "create_or_update_file",
+      "risk_summary": "Create or update a single file in a GitHub repository.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "search_repositories",
+      "risk_summary": "Search for GitHub repositories.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "create_repository",
+      "risk_summary": "Create a new GitHub repository.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "get_file_contents",
+      "risk_summary": "Get the contents of a file or directory from a GitHub repository.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "push_files",
+      "risk_summary": "Push multiple files to a GitHub repository in a single commit.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "create_issue",
+      "risk_summary": "Create a new issue in a GitHub repository.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "create_pull_request",
+      "risk_summary": "Create a new pull request in a GitHub repository.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "fork_repository",
+      "risk_summary": "Fork a GitHub repository to your account.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "create_branch",
+      "risk_summary": "Create a new branch in a GitHub repository.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "list_commits",
+      "risk_summary": "Get list of commits of a branch.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "list_issues",
+      "risk_summary": "List issues in a GitHub repository with filtering.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "update_issue",
+      "risk_summary": "Update an existing issue in a GitHub repository.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "add_issue_comment",
+      "risk_summary": "Add a comment to an existing issue.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "search_code",
+      "risk_summary": "Search for code across GitHub repositories.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "search_issues",
+      "risk_summary": "Search for issues and pull requests across GitHub.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "search_users",
+      "risk_summary": "Search for users on GitHub.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "get_issue",
+      "risk_summary": "Get details of a specific issue.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "get_pull_request",
+      "risk_summary": "Get details of a specific pull request.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "list_pull_requests",
+      "risk_summary": "List and filter repository pull requests.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "create_pull_request_review",
+      "risk_summary": "Create a review on a pull request.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "merge_pull_request",
+      "risk_summary": "Merge a pull request.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "get_pull_request_files",
+      "risk_summary": "Get files changed in a pull request.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "get_pull_request_status",
+      "risk_summary": "Get combined status of all status checks.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "update_pull_request_branch",
+      "risk_summary": "Update a pull request branch.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "get_pull_request_comments",
+      "risk_summary": "Get review comments on a pull request.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "High",
+  "action": "ALLOW"
+}

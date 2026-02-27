@@ -1,0 +1,21 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "ListBuckets",
+      "risk_summary": "Returns list of all S3 buckets owned by authenticated user.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "ListObjectsV2",
+      "risk_summary": "Returns up to 1000 objects in a bucket per request with prefix filtering.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "GetObject",
+      "risk_summary": "Retrieves an object from S3 by its full key name.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Low",
+  "action": "ALLOW"
+}

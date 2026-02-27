@@ -1,0 +1,408 @@
+{
+  "servers_analyzed": [
+    "git",
+    "sendgrid"
+  ],
+  "total_tools": 24,
+  "pairwise_combinations": 276,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "git_status",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_diff_unstaged",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_diff_staged",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_diff",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_commit",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_add",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_reset",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_log",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_show",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_create_branch",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_checkout",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "git_branch",
+      "server_origin": "git",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_contact",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_to_list",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_templates",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_stats",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "validate_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_verified_senders",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "git_diff",
+      "tool_a_server": "git",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Exfiltration of source code or source diffs from the local repository to arbitrary recipients via email.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "git_diff alone allows reading code differences; send_email alone allows sending an arbitrary message to any recipient. When chained, the agent can read sensitive code (or diffs) and immediately transmit them out-of-band, enabling exfiltration that neither server enables solo.",
+      "is_cross_server": true,
+      "environment_conditions": "No network egress constraints on sendgrid API calls. Agent has access to both tool sets in same context.",
+      "existing_governance_gap": "Per-server review sees git tools as only interacting with local code, and sendgrid tools as sending benign emails. Combining them enables cross-domain data transfer invisible to isolated reviews."
+    },
+    {
+      "id": "S2",
+      "tool_a": "git_log",
+      "tool_a_server": "git",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Exfiltration of git history (metadata or full commit messages) via outbound email.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "The agent can use git_log to obtain project history, possibly containing secrets or sensitive development info, and exfiltrate that history via email.",
+      "is_cross_server": true,
+      "environment_conditions": "No outbound policy on sendgrid use; agent memory can shuttle content between read and send steps.",
+      "existing_governance_gap": "Each tool/server only grants a read or messaging ability, but an agent can combine to pipe the output out undetected."
+    },
+    {
+      "id": "S3",
+      "tool_a": "git_show",
+      "tool_a_server": "git",
+      "tool_b": "send_to_list",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Bulk exfiltration of repository snapshot or specific file/version to arbitrary distribution lists.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "git_show can be used to extract any historic file or project state; send_to_list enables automated bulk delivery to multiple contacts without human oversight, multiplying the risk.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent able to access target contact lists on sendgrid; unconstrained outbound use.",
+      "existing_governance_gap": "Neither server provides bulk exfil natively, but together they enable undetectable, mass data leaks."
+    },
+    {
+      "id": "S4",
+      "tool_a": "git_diff_unstaged",
+      "tool_a_server": "git",
+      "tool_b": "validate_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [
+        "send_email"
+      ],
+      "emergent_capability": "Automated spear phishing using recent, contextually-relevant code changes inside crafted emails to project members.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "git_diff_unstaged surfaces uncommitted work (possibly private vulnerabilities); validate_email lets agent check validity of internal/external targets; chained with send_email, the agent can craft credible, contextual phishing messages.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent has memory/context to correlate file changes and valid email addresses.",
+      "existing_governance_gap": "Each server's tools are non-threatening alone, but the ability to combine privileged source and validated email targeting is novel."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "AC1",
+      "name": "Source Code Exfiltration via Email",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "1. Use git_diff to read sensitive, recent code changes.",
+        "2. Use send_email to send the diff output to an arbitrary external email address."
+      ],
+      "final_capability": "Automated, context-informed data exfiltration of source code diffs via external channel.",
+      "severity": "High",
+      "human_approval_bypass": "Step 1 is just reading code with git_diff; Step 2 is just sending an email, each appearing innocuous, but their combined effect is exfiltration.",
+      "mitigation": "Enforce mutual exclusion constraint: never authorize sendgrid email actions in the same session as git repository read actions. Monitor for chained reads followed by immediate email sends."
+    },
+    {
+      "chain_id": "AC2",
+      "name": "Bulk Commit History Leak",
+      "composition_surpluses_used": [
+        "S2",
+        "S3"
+      ],
+      "steps": [
+        "1. Use git_log to extract commit and history data.",
+        "2. Use send_to_list to broadcast extracted commit data to contact lists."
+      ],
+      "final_capability": "Bulk exfiltration of project history to arbitrary recipients.",
+      "severity": "Critical",
+      "human_approval_bypass": "Regular use of git_log and bulk sending both look normal; only their combination is malicious.",
+      "mitigation": "Global session-level guardrails: block use of any email messaging tool from sendgrid when session includes git-log, git-show, or git-diff commands. Restrict output size and monitor for unusual bulk sends to non-standard or external recipients."
+    },
+    {
+      "chain_id": "AC3",
+      "name": "Spear Phishing Preparation With Project Intel",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "1. Use git_diff_unstaged to read currently edited (but not yet committed) source changes.",
+        "2. Use validate_email to find valid emails of known contributors or suggest plausible targets.",
+        "3. Use send_email to send customized, context-relevant spear phishing emails using real code snippets."
+      ],
+      "final_capability": "Automated, contextually accurate spear phishing enabled by combining project-specific knowledge with validated outbound delivery.",
+      "severity": "High",
+      "human_approval_bypass": "Reading diffs and validating emails are individually useful, but together they enable micro-targeted phishing attacks.",
+      "mitigation": "Add context-level tracking: if recent use of git_read/diff commands is detected, block or require additional approval for external email actions. Consider quarantine on session memory transfer between these tool classes."
+    }
+  ],
+  "cross_server_risk_summary": "Combining read access to git repositories with unrestricted outbound messaging via sendgrid creates significant data exfiltration and targeted phishing risks. These are emergent risks: none of the tools or servers provide this capability alone, and per-server reviews would not flag risks. The main danger is that an agent can pipe sensitive or confidential organizational code, commit history, or change details directly to arbitrary or bulk external recipients, or use project context to improve social engineering attacks. Surveillance and data outflow are both enabled by the composition.",
+  "composition_risk_score": "Critical",
+  "governance_blind_spots": [
+    "Both 'git' and 'sendgrid' tools appear safe on their own: one only reads local files; the other only sends emails via a verified sender. In isolation, neither appears to have elevated risk.",
+    "No per-server review would reveal that chaining 'git_diff' with 'send_email' (cross-server) enables code exfiltration.",
+    "No single-tool scan would detect that combining 'git_show' or 'git_log' with bulk sendgrid actions enables mass data leakage.",
+    "No server policy would catch that gathering code context (git) plus email validation empowers advanced targeting for phishing."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion: prohibit session or workflow in which both git repository read actions and sendgrid outbound actions are co-authorized or co-invoked.",
+    "Implement session-level tracking: block or trigger alerts if git file or commit data is immediately followed by any sendgrid messaging tool use.",
+    "Require environment hardening: only permit sendgrid actions from contexts with strict input controls and content analysis on outbound data. Block automated context-passing from code base tools.",
+    "Apply smart output constraints: restrict the size, frequency, and destination diversity of sends from sendgrid-connected workflows.",
+    "Require explicit cross-server review and threat modeling prior to deployment of agent workspaces with both source control and outbound messaging capabilities."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Block any workflow or session which uses a git 'read' tool (any of: git_diff, git_log, git_show, git_diff_unstaged, git_branch) and a sendgrid outbound 'send' tool (any of: send_email, send_to_list, add_contact, create_template) in the same task or session.",
+    "Establish session memory boundary: do not allow transfer of content or summaries from git results into outbound messages without human authorization.",
+    "Monitor and alert whenever sendgrid tools are triggered after git tools have been used."
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "git_status",
+      "risk_summary": "Shows working tree status.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "git_diff_unstaged",
+      "risk_summary": "Shows changes not yet staged.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "git_diff_staged",
+      "risk_summary": "Shows staged changes.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "git_diff",
+      "risk_summary": "Shows differences between branches or commits.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "git_commit",
+      "risk_summary": "Records changes with commit message.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "git_add",
+      "risk_summary": "Adds file contents to staging area.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "git_reset",
+      "risk_summary": "Unstages all staged changes.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "git_log",
+      "risk_summary": "Shows commit logs with optional date filtering.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "git_show",
+      "risk_summary": "Shows contents of specific commit.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "git_create_branch",
+      "risk_summary": "Creates new branch from optional base.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "git_checkout",
+      "risk_summary": "Switches to specified branch.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "git_branch",
+      "risk_summary": "Lists branches with type filtering.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Low",
+  "action": "ALLOW"
+}

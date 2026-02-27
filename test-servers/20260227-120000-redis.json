@@ -1,0 +1,101 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "set_string",
+      "risk_summary": "Set string values with optional expiration for caching and sessions.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "get_string",
+      "risk_summary": "Retrieve string values by key.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "hash_set",
+      "risk_summary": "Store field-value pairs in hash structures.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "hash_get",
+      "risk_summary": "Retrieve field values from hashes.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "hash_delete",
+      "risk_summary": "Remove fields from hashes.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "list_append",
+      "risk_summary": "Append items to lists for queue operations.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "list_pop",
+      "risk_summary": "Pop items from lists.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "list_range",
+      "risk_summary": "Retrieve range of items from lists.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "set_add",
+      "risk_summary": "Add members to sets for unique value tracking.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "set_remove",
+      "risk_summary": "Remove members from sets.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "set_members",
+      "risk_summary": "List all members of a set.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "publish",
+      "risk_summary": "Publish messages to pub/sub channels for real-time notifications.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "subscribe",
+      "risk_summary": "Subscribe to receive messages from channels.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "stream_add",
+      "risk_summary": "Add items to data streams for event logging.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "stream_read",
+      "risk_summary": "Read from streams with consumer group support.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "json_store",
+      "risk_summary": "Store JSON documents in Redis.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "json_retrieve",
+      "risk_summary": "Retrieve JSON documents with path-based access.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "json_manipulate",
+      "risk_summary": "Modify JSON structures in Redis.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "server_info",
+      "risk_summary": "Retrieve database information and connection details.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Medium",
+  "action": "ALLOW"
+}

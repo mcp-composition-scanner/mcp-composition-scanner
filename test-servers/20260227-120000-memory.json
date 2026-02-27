@@ -1,0 +1,51 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "create_entities",
+      "risk_summary": "Create multiple new entities in the knowledge graph.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "create_relations",
+      "risk_summary": "Create multiple new relations between entities.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "add_observations",
+      "risk_summary": "Add new observations to existing entities.",
+      "risk_level": "Medium"
+    },
+    {
+      "tool_name": "delete_entities",
+      "risk_summary": "Delete multiple entities and their associated relations.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "delete_observations",
+      "risk_summary": "Delete specific observations from entities.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "delete_relations",
+      "risk_summary": "Delete multiple relations from the knowledge graph.",
+      "risk_level": "High"
+    },
+    {
+      "tool_name": "read_graph",
+      "risk_summary": "Read the entire knowledge graph.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "search_nodes",
+      "risk_summary": "Search for nodes in the knowledge graph based on a query.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "open_nodes",
+      "risk_summary": "Open specific nodes in the knowledge graph by their names.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Medium",
+  "action": "ALLOW"
+}

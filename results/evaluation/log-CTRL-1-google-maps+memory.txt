@@ -1,0 +1,81 @@
+Collecting tools from result files...
+  ✓ google-maps (from file): 7 tools extracted
+  ✓ memory (from file): 9 tools extracted
+
+▶ Running composition analysis on 16 tools from 2 servers...
+  Pairwise search space: 120 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    google-maps, memory
+  Tools:      16
+  Pairs:      120
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 3
+
+  [S1] High [CROSS-SERVER]
+    Tools: maps_reverse_geocode (google-maps) ⊕ add_observations (memory)
+    Emergent: Creation of a persistent, queryable geolocation surveillance graph by autonomously mapping addresses (via reverse geocode) from any available coordinates, then associating these locations with entities or observations in the agent’s own long-term knowledge graph.
+    Class: Surveillance
+    Environment: Agent has access to inputting coordinates and storing output from tools; knowledge graph not access controlled by user; session context memory enables data handoff.
+    Gap: Per-tool/server reviews of maps or memory see no harm. Only the composition generates location-tracking database, which is invisible in individual TPR/TPA risk assessments.
+
+  [S2] Medium [CROSS-SERVER]
+    Tools: maps_search_places (google-maps) ⊕ create_entities (memory)
+    Emergent: Automated bulk population of the agent’s knowledge graph with place data from arbitrary searches (e.g., all businesses of a certain type, or all homes on a block), enabling mass enrichment or mapping without user curation.
+    Class: DataEnrichment
+    Environment: No bulk upload limit or rate limiting, no user review on batch inserts.
+    Gap: Google-maps does not store results, and memory does not access external APIs. This enrichment ability is only available in composite, not in isolation.
+
+  [S3] High [CROSS-SERVER]
+    Tools: maps_place_details (google-maps) ⊕ add_observations (memory)
+    Emergent: Persistent enrichment and potential deanonymization of entities by linking external place attributes (phone, hours, reviews) to structured knowledge graph nodes—enabling profile building far beyond in-session lookup.
+    Class: Surveillance
+    Environment: Access to both place attributes and persistent graph storage; no enforced data retention/scoping for observations.
+    Gap: Individually, place details can only be retrieved transiently, and memory cannot ingest outside place info. This persistent enrichment path exists only when both are combined.
+
+  ⚠ ATTACK CHAINS: 3
+
+  [A1] Autonomous Location Surveillance Log — High
+    Final capability: Agent-run persistent, queryable location tracking database—effectively enables surveillance by aggregating geolocation data about individuals/entities.
+    Approval bypass: Each tool invocation appears benign: looking up an address, or recording an observation. But over time, the agent composes a surveillance log, which is undetectable in per-invocation or per-tool reviews.
+    Step 1: Step 1: The agent receives or discovers GPS coordinates (from user input, task output, or another allowed tool).
+    Step 2: Step 2: It invokes maps_reverse_geocode to translate coordinates into a street address.
+    Step 3: Step 3: It uses add_observations to write this address, possibly with timestamp, as a new observation tied to an entity representing a person, place, or user.
+    Step 4: Step 4: Optionally, it repeats this across multiple sessions or with multiple coordinates, aggregating over time a complete movement log in the knowledge graph.
+
+  [A2] Mass Real-World Entity Enrichment — Medium
+    Final capability: Bulk, unsupervised creation of detailed, external data-enriched knowledge graphs.
+    Approval bypass: Each step looks harmless—legitimate API queries, data insertion—but the result is unreviewed graph enrichment that would be flagged in aggregate only.
+    Step 1: Step 1: Agent invokes maps_search_places with a broad query (e.g. 'all coffee shops in New York City').
+    Step 2: Step 2: Receives a very large results set.
+    Step 3: Step 3: Uses create_entities to instantiate each place as a node in the knowledge graph.
+    Step 4: Step 4: Optionally, uses other memory tools to add place-specific attributes (from google-maps or user data).
+
+  [A3] Surveillance Profile Enrichment — High
+    Final capability: Persistent, longitudinal enrichment of knowledge graph entities with detailed external metadata—enabling deanonymization and advanced profiling.
+    Approval bypass: Each step appears as routine API use or memory update. Only through historical or aggregate review would the latent surveillance risk be seen.
+    Step 1: Step 1: Agent identifies or receives an entity (person, business, etc).
+    Step 2: Step 2: Uses maps_place_details to fetch a rich set of attributes for that entity.
+    Step 3: Step 3: Inserts or attaches these attributes via add_observations to the entity node in the knowledge graph.
+    Step 4: Step 4: Repeats for other entities or over time, generating a rich, historical record.
+    Step 5: Step 5: Optionally correlates across entities, times, and places for deanonymization or advanced profiling.
+
+  GOVERNANCE BLIND SPOTS:
+    • Neither server, in isolation, allows persistent geolocation tracking, but their combination enables it via agent-driven composition.
+    • Bulk import of real-world place data into the knowledge graph is barred by neither server alone, yet could enable mass enrichment/OSINT-style scraping.
+    • Place detail enrichment and person/entity profiling can be automated cross-session without any per-tool or per-session detection.
+
+  RECOMMENDED CONSTRAINTS:
+    • Explicit prohibition on bulk place/node creation in memory from maps APIs unless permitted by data governance policy.
+    • Automatic policy: do not permit logs/observations recording individual geolocations into persistent agent memory unless (1) consent is captured, (2) use is reviewed.
+    • Monitor and cap rate of memory enrichment with external place attributes (maps → add_observations) per session.
+    • Mandate user review for any agent proposal to aggregate or correlate geolocation and entity data across both servers.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101219-COMPOSITION-google-maps+memory.json

@@ -1,0 +1,41 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "maps_geocode",
+      "risk_summary": "Convert an address into geographic coordinates.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "maps_reverse_geocode",
+      "risk_summary": "Convert coordinates into an address.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "maps_search_places",
+      "risk_summary": "Search for places using Google Places API.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "maps_place_details",
+      "risk_summary": "Get detailed information about a specific place.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "maps_distance_matrix",
+      "risk_summary": "Calculate travel distance and time between origins and destinations.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "maps_elevation",
+      "risk_summary": "Get elevation data for locations on earth.",
+      "risk_level": "Low"
+    },
+    {
+      "tool_name": "maps_directions",
+      "risk_summary": "Get directions between two points.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Low",
+  "action": "ALLOW"
+}

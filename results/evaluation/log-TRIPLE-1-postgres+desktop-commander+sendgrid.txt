@@ -1,0 +1,94 @@
+Collecting tools from result files...
+  ✓ postgres (from file): 1 tools extracted
+  ✓ desktop-commander (from file): 19 tools extracted
+  ✓ sendgrid (from file): 12 tools extracted
+
+▶ Running composition analysis on 32 tools from 3 servers...
+  Pairwise search space: 496 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    postgres, desktop-commander, sendgrid
+  Tools:      32
+  Pairs:      496
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 4
+
+  [S1] Critical [CROSS-SERVER]
+    Tools: query (postgres) ⊕ send_email (sendgrid)
+    Emergent: Autonomous exfiltration of arbitrary database query results to external email recipients without human review.
+    Class: DataExfiltration
+    Environment: No outbound filtering on sendgrid API, agent able to construct/parse email payloads.
+    Gap: Postgres server would see only data reads; sendgrid server sees only innocuous emails. Neither server, in isolation, can detect the DataExfiltration risk from cross-composition.
+
+  [S2] Critical [CROSS-SERVER]
+    Tools: read_file (desktop-commander) ⊕ send_email (sendgrid)
+    Emergent: Exfiltration of sensitive file contents from the local desktop environment to external parties via email, including recursive and bulk file operations.
+    Class: DataExfiltration
+    Environment: sendgrid accessible for outbound email, desktop agent's file access not restricted.
+    Gap: Desktop review sees read_file as benign/local; sendgrid review sees legitimate email uses. The combined risk of file exfiltration is unreviewable in single-server governance.
+
+  [S3] Critical [CROSS-SERVER]
+    Tools: query (postgres) ⊕ write_file (desktop-commander)
+    + send_email
+    Emergent: Exfiltration of database contents by staging them in local files and sending them via email, with optional file packaging or transformation.
+    Class: DataExfiltration
+    Environment: Agent can write unrestricted files and send as outgoing email attachments.
+    Gap: Neither the DB nor desktop server sees the full attack surface — sensitive SQL exports can be staged in files, then exfiltrated via a messaging channel invisible to their own policy controls. Cross-composition is the blind spot.
+
+  [S4] Critical [CROSS-SERVER]
+    Tools: start_process (desktop-commander) ⊕ send_email (sendgrid)
+    Emergent: Execution of custom scripts/code that collect, transform, or compress sensitive data for exfiltration via outbound email.
+    Class: DataExfiltration
+    Environment: Agent can execute arbitrary processes and escalate to use network/messaging tools.
+    Gap: Execution ('start_process') appears safe in desktop context; sending arbitrary content by email via sendgrid is a communication channel. Only in composition can code be executed with results exfiltrated off-host, defeating audit controls.
+
+  ⚠ ATTACK CHAINS: 4
+
+  [AC1] Database → File → Email Exfiltration Chain — Critical
+    Final capability: Stealth export of large volumes of sensitive DB data to unmonitored destinations, including via formatted or bulk file attachments.
+    Approval bypass: Each step appears business-justified: querying, file writing/conversion, and business messaging are normal. Only the full data pipeline constitutes a breach.
+    Step 1: Run a sensitive query on the Postgres database using the 'query' tool.
+    Step 2: Write results to a local file (CSV, DOCX, PDF, etc.) using 'write_file'.
+    Step 3: Use 'send_email' to send the output file as an attachment to an external recipient.
+
+  [AC2] Desktop Filesystem Exfiltration by Email — Critical
+    Final capability: Mass or targeted exfiltration of sensitive documents, credentials, or process dumps outside organizational control.
+    Approval bypass: Reading local files, editing, and emailing as daily workflow. No single tool invocation appears suspicious.
+    Step 1: Use 'read_file' or 'read_multiple_files' to access files of interest, possibly discovered via 'list_directory' or 'start_search'.
+    Step 2: Optionally reformat, compress, or rename content with 'start_process' or 'edit_block'.
+    Step 3: Send file contents or attachments externally using 'send_email'.
+
+  [AC3] Automated Code Execution and Email Exfiltration — Critical
+    Final capability: Automated code execution leading to rapid, undetected data exfiltration, possibly with custom compression/encryption.
+    Approval bypass: Running local code/scripts and emailing output fits many IT workflows. Only integrated audit would detect the pipeline.
+    Step 1: Use 'start_process' to fetch, decrypt, or process sensitive information (arbitrary code execution).
+    Step 2: Package results with 'write_file' or output directly.
+    Step 3: Send output to external parties via 'send_email'.
+
+  [AC4] Direct DB-to-Email Data Leak — Critical
+    Final capability: Rapid exfiltration of database information via trusted email without local file traces.
+    Approval bypass: Business emails often summarize analytics or queries; DB queries with no obvious data egress. Context is needed to see the end-to-end risk.
+    Step 1: Query DB for sensitive data via 'query'.
+    Step 2: Format/copy results directly into email body via 'send_email'.
+
+  GOVERNANCE BLIND SPOTS:
+    • Per-tool and per-server review fail to see that combining file/database read capabilities with outbound messaging (email) creates immediate exfiltration risks.
+    • Neither desktop nor DB servers have audit visibility into external email recipients or content transmitted.
+    • Automated agent chaining (e.g., converting DB output to files, then sending via email) is invisible to workflow/capability tracking at the server level.
+    • Business-appropriate tool scopes ('read file', 'send email', 'query DB') do not flag risk when considered individually, only when composed.
+    • No DLP or workflow interlocks exist at the agent (cross-server) level under current governance.
+
+  RECOMMENDED CONSTRAINTS:
+    • Do not allow 'send_email' or 'send_to_list' (sendgrid) to be invoked in the same session as any of: 'query' (postgres), 'read_file', 'read_multiple_files', 'write_file', 'start_process' (desktop-commander).
+    • If database or file read/write tools are authorized, require separate, human-initiated workflows to transmit results outside the local/DB environment.
+    • Monitor and flag any agent workflow that attempts to transport data from a read-capable tool (DB/filesystem) to an outbound messaging function during a session.
+    • Disallow agent-initiated attachments or email sends where the payload is derived from recent database queries or file reads without explicit human review.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101437-COMPOSITION-postgres+desktop-comm+sendgrid.json

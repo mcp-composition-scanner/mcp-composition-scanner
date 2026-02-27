@@ -1,0 +1,96 @@
+Collecting tools from result files...
+  ✓ puppeteer (from file): 7 tools extracted
+  ✓ sendgrid (from file): 12 tools extracted
+
+▶ Running composition analysis on 19 tools from 2 servers...
+  Pairwise search space: 171 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    puppeteer, sendgrid
+  Tools:      19
+  Pairs:      171
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 4
+
+  [S1] High [CROSS-SERVER]
+    Tools: puppeteer_evaluate (puppeteer) ⊕ send_email (sendgrid)
+    Emergent: Autonomous exfiltration of arbitrary browser page data (e.g., sensitive information extracted/created in the browser) via high-reliability email channel.
+    Class: DataExfiltration
+    Environment: No egress filtering on SendGrid API; unrestricted use of both toolchains by agent; agent memory able to relay data between tool outputs.
+    Gap: Per-server review sees only browser automation (puppeteer) and legitimate messaging (sendgrid); neither appears capable of cross-domain exfiltration alone.
+
+  [S2] Critical [CROSS-SERVER]
+    Tools: puppeteer_navigate (puppeteer) ⊕ send_to_list (sendgrid)
+    + list_contacts
+    Emergent: Automated spear-phishing/credential harvesting workflow: scrape phishing kit or credential form, then bulk-distribute crafted phishing email to real users from trusted domain.
+    Class: SupplyChainModification
+    Environment: Agent given both puppeteer and sendgrid toolchains; sendgrid account has non-restricted verified sender status.
+    Gap: Neither server exposes a full threat path alone (puppeteer is browser-only, sendgrid is messaging-only), but in composition, an agent can design and deploy harmful phishing campaigns programmatically.
+
+  [S3] High [CROSS-SERVER]
+    Tools: puppeteer_screenshot (puppeteer) ⊕ send_email (sendgrid)
+    Emergent: Silent screenshot of sensitive web session and exfiltration via email, bypassing endpoint DLP controls.
+    Class: Surveillance
+    Environment: Both toolchains available, agent can transfer image payload between phases.
+    Gap: Per-server review assumes no channel from screenshot content to egress; only cross-server comp presents unsupervised outbound data movement.
+
+  [S4] Medium [CROSS-SERVER]
+    Tools: puppeteer_evaluate (puppeteer) ⊕ add_contact (sendgrid)
+    Emergent: Harvesting and injecting external web data into internal/managed contact lists, facilitating supply chain poisoning or data poisoning against communication lists.
+    Class: SupplyChainModification
+    Environment: Agent cross-tool memory buffer or auto data transformation; unrestricted access to both APIs.
+    Gap: Individual reviews see only scraping or contact management; only together do they create automated supply chain poisoning risk.
+
+  ⚠ ATTACK CHAINS: 4
+
+  [C1] Automated Web Data Exfiltration via Email — High
+    Final capability: Arbitrary web session data extraction and exfiltration via enterprise email
+    Approval bypass: Each tool invocation appears legitimate independently (browsing, sending email), but chained enable covert exfiltration.
+    Step 1: Agent navigates using puppeteer_navigate to target web page.
+    Step 2: Agent executes puppeteer_evaluate to scrape sensitive content (e.g., page credentials, confidential data).
+    Step 3: Agent assembles result as email body/attachment.
+    Step 4: Agent invokes send_email to transmit the data to attacker-controlled address.
+
+  [C2] Autonomous Phishing Kit Harvest and Campaign Deployment — Critical
+    Final capability: Fully automated, highly targeted, and trusted-domain spear phishing
+    Approval bypass: Each API call appears isolated and purpose-appropriate; only in composition does the chain constitute a campaign.
+    Step 1: Agent uses puppeteer_navigate and puppeteer_evaluate to visit phishing kit deployment on the open web.
+    Step 2: Agent extracts phishing forms or fake login template.
+    Step 3: Agent gathers list_contacts to enumerate recipient addresses.
+    Step 4: Agent creates phishing email with the harvested web payload.
+    Step 5: Agent uses send_to_list to bulk-distribute to internal/external contacts.
+
+  [C3] Silent Screenshot Exfiltration — High
+    Final capability: Surreptitious visual surveillance and egress via email
+    Approval bypass: Screenshotting and email sending tasks look non-threatening when viewed per-server.
+    Step 1: Agent uses puppeteer_navigate to reach sensitive internal resource.
+    Step 2: Agent invokes puppeteer_screenshot to capture screen.
+    Step 3: Agent invokes send_email to transmit the screenshot externally.
+
+  [C4] Contact List Poisoning from Web Harvest — Medium
+    Final capability: Automated addition of malicious or bogus records into trusted distribution channels
+    Approval bypass: Scraping web data and updating lists are benign in isolation; combined, risk is introduced.
+    Step 1: Agent scrapes public or shady web directories using puppeteer_evaluate.
+    Step 2: Agent transforms scraped data into contact formats.
+    Step 3: Agent invokes add_contact on sendgrid to poison contact lists.
+
+  GOVERNANCE BLIND SPOTS:
+    • Browser automation is considered safe in isolation (puppeteer) — it lacks egress capabilities.
+    • SendGrid email and contact management functions, alone, cannot harvest or assemble malicious payloads — assumed safe under least privilege.
+    • Joint approval review does not identify or block chained data flows, especially agent-driven flows using memory/context.
+    • Each step appears to obey purpose limitation, so human-in-the-loop review fails to see the end-to-end risk.
+
+  RECOMMENDED CONSTRAINTS:
+    • puppeteer_evaluate, puppeteer_screenshot, and similar data-producing puppeteer tools must not be co-invoked with sendgrid messaging APIs (send_email, send_to_list) within same agent session.
+    • Forbid cross-tool agent memory/context transfer from browser-extracted payloads to messaging or contact management invocations.
+    • Require payload audit if browser-derived data is distributed via SendGrid senders.
+    • Disallow add_contact via data sourced from external/browsed sites unless human-verified.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100629-COMPOSITION-puppeteer+sendgrid.json

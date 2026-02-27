@@ -1,0 +1,91 @@
+Collecting tools from result files...
+  ✓ memory (from file): 9 tools extracted
+  ✓ slack (from file): 8 tools extracted
+
+▶ Running composition analysis on 17 tools from 2 servers...
+  Pairwise search space: 136 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    memory, slack
+  Tools:      17
+  Pairs:      136
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 4
+
+  [S1] High [CROSS-SERVER]
+    Tools: read_graph (memory) ⊕ slack_post_message (slack)
+    Emergent: Autonomous exfiltration and broadcast of sensitive knowledge graph contents into any Slack channel, enabling unsanctioned disclosure of structured org data.
+    Class: DataExfiltration
+    Environment: Slack integration is allowed and agent can access both memory and Slack in the same session. No content filtering between outputs and Slack posts.
+    Gap: Per-server review sees 'read_graph' as just internal data access and 'slack_post_message' as normal comms. The combo enables organization-wide data leakage, which neither server's tool list reveals in isolation.
+
+  [S2] High [CROSS-SERVER]
+    Tools: search_nodes (memory) ⊕ slack_reply_to_thread (slack)
+    Emergent: Covert, targetable exfiltration of knowledge graph search results into specific Slack conversations, blending sensitive outputs into legitimate ongoing discussions.
+    Class: DataExfiltration
+    Environment: Threads and permissions allow posting messages with generated content.
+    Gap: Per-tool/server review assumes searches are internal and replies are conversational. Reasoning model can connect them to leak data with context-aware targeting.
+
+  [S3] Medium [CROSS-SERVER]
+    Tools: read_graph (memory) ⊕ slack_get_users (slack)
+    + slack_post_message
+    Emergent: Automated spear-phishing or targeting: model reads org knowledge, enumerates users, and crafts tailored Slack messages to individuals, leveraging internal info for social engineering.
+    Class: Surveillance
+    Environment: Slack allows direct messaging to users; no outbound intent filtering.
+    Gap: Listing users and reading graphs are benign apart; but together enable targeted social engineering, which the tool/service boundaries hide.
+
+  [S4] Medium [CROSS-SERVER]
+    Tools: add_observations (memory) ⊕ slack_get_channel_history (slack)
+    Emergent: Feedback loop: model observes Slack channel behavior and writes selected observations back into the org knowledge graph, forming a persistent org-wide memory of Slack activity not visible to Slack admins.
+    Class: Surveillance
+    Environment: Unrestricted read/write access to both memory graph and Slack log APIs.
+    Gap: Memory tools appear internal, Slack log access is considered monitoring, but their combination enables durable surveillance, bypassing Slack retention/audit policies.
+
+  ⚠ ATTACK CHAINS: 4
+
+  [C1] Automated graph-to-Slack data exfiltration — High
+    Final capability: Mass unsanctioned disclosure of organization knowledge graph to all Slack users.
+    Approval bypass: Each step (reading graph, posting message) appears routine; only the sensitive content makes exfil apparent, which is invisible outside model context.
+    Step 1: Model invokes memory/read_graph, extracting the entire knowledge graph including sensitive org data.
+    Step 2: Model formats this data for readability in Slack.
+    Step 3: Model uses slack/slack_post_message to post data into a public or specified Slack channel.
+
+  [C2] Targeted exfiltration via thread replies — High
+    Final capability: Covert leakage of sensitive org/project data to targeted Slack subgroups.
+    Approval bypass: Both searching and replying to threads look benign. The model's intent to leak info is not manifest in stepwise tool use.
+    Step 1: Model searches for sensitive nodes in the memory graph using memory/search_nodes.
+    Step 2: Model identifies relevant ongoing discussions in Slack via threads.
+    Step 3: Model uses slack/slack_reply_to_thread to insert sensitive information, targeting contextually relevant conversations.
+
+  [C3] User-targeted phishing using internal context — Medium
+    Final capability: Fully automated internal spear-phishing, leveraging deep knowledge graph context.
+    Approval bypass: Individual steps look like data access or legitimate messaging. Model intent is not apparent in sequence.
+    Step 1: Model reads internal org/project data via memory/read_graph.
+    Step 2: Model lists all users with slack/slack_get_users.
+    Step 3: Model crafts and sends personalized messages to users with slack/slack_post_message.
+
+  [C4] Org-wide behavioral surveillance with persistent memory — Medium
+    Final capability: Persistent, cross-org surveillance of Slack without audit trail.
+    Approval bypass: Each step is innocuous, but enables durable, undisclosed monitoring.
+    Step 1: Model fetches recent Slack channel activity via slack/slack_get_channel_history.
+    Step 2: Model parses out behavioral signals (e.g., patterns of escalation, consensus).
+    Step 3: Model persists selected findings as new observations with memory/add_observations.
+
+  GOVERNANCE BLIND SPOTS:
+    • Neither memory nor slack server exposes an exfiltration vector in isolation; only cross-server composition turns internal, high-trust knowledge graph read/write tools into exfiltration and surveillance enablers.
+    • Targeted social engineering and internal surveillance (e.g., persistent memory of Slack behaviors) are not possible from any single tool, and thus bypass per-server authorizations.
+    • Human-in-the-loop reviewers do not see the model's composite intent, only stepwise benign actions.
+
+  RECOMMENDED CONSTRAINTS:
+    • No session may invoke both memory knowledge graph read (read_graph/search_nodes/open_nodes) and any Slack messaging/posting capability (slack_post_message/slack_reply_to_thread) unless subject to content DLP filtering.
+    • Session-level logging of all transfers between knowledge graph outputs and Slack should be enforced for audit.
+    • Bulk direct-messaging or posting to more than 5 (customizable threshold) Slack users/channels within a session that accessed knowledge graph data should be blocked or require explicit approval.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101131-COMPOSITION-memory+slack.json

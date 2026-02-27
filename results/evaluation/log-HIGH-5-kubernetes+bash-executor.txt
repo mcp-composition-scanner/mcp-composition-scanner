@@ -1,0 +1,78 @@
+Collecting tools from result files...
+  ✓ kubernetes (from file): 4 tools extracted
+  ✓ bash-executor (from file): 2 tools extracted
+
+▶ Running composition analysis on 6 tools from 2 servers...
+  Pairwise search space: 15 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    kubernetes, bash-executor
+  Tools:      6
+  Pairs:      15
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 3
+
+  [S1] Critical [CROSS-SERVER]
+    Tools: execute_bash (bash-executor) ⊕ kubectl (kubernetes)
+    Emergent: Arbitrary execution and cluster compromise: Combining execute_bash (arbitrary Bash) with kubectl enables an agent to move from local shell access (provided by bash-executor) to full Kubernetes cluster administrator capabilities by writing and executing custom kubectl commands/scripts (e.g., extracting secrets, altering deployments, exfiltrating cluster data, or spawning privileged pods with broad network egress). The agent can stage local scripts or binaries and push them into containers via kubectl.
+    Class: CloudInfra:ClusterTakeover, DataExfiltration, SupplyChainModification
+    Environment: No namespace isolation and where kubectl config/context is available in bash-executor environment; or agent can use execute_bash to alter kubeconfig contexts or credentials.
+    Gap: Per-server review sees bash-executor as local system automation, and kubernetes tools as safe admin utilities. Only in combination do they allow dynamic, arbitrary new code and commands to be delivered into critical production infra.
+
+  [S2] Critical [CROSS-SERVER]
+    Tools: execute_bash (bash-executor) ⊕ argocd (kubernetes)
+    Emergent: Autonomous supply chain compromise: Agent scripts malicious code or configuration changes locally, pushes to a monitored Git repo using bash-executor, and then uses argocd (ArgoCD) to propagate those changes into the live Kubernetes cluster automatically, bypassing manual review.
+    Class: SupplyChainModification, CloudInfra, CodeDeployment
+    Environment: ArgoCD is configured to auto-sync or agent can trigger sync. No additional policy or repo-integrity checks block deployments.
+    Gap: Per-server review cannot catch that bash-executor scripts can alter source repos, and ArgoCD syncs those changes to production. Each server looks safe: bash-executor can't change cluster; ArgoCD can't alter code base. Together, agent can autonomously modify production code and config.
+
+  [S3] High [CROSS-SERVER]
+    Tools: execute_bash (bash-executor) ⊕ istioctl (kubernetes)
+    Emergent: Network traffic redirection or exfiltration: Agent scripts, via Bash, modifications to Istio policies or manifests, then applies them via istioctl to reroute, mirror, or exfiltrate traffic to attacker-controlled endpoints.
+    Class: DataExfiltration, Surveillance, NetworkManipulation
+    Environment: Istio installed with management access. Network egress not filtered. Bash local environment can craft YAML or script files.
+    Gap: Executors see only standard Bash or Istio management actions in per-tool review, not that Bash can draft and Istio can deploy surveillance/exfiltration rules.
+
+  ⚠ ATTACK CHAINS: 3
+
+  [C1] Cluster Takeover via Bash → Kubectl Chain — Critical
+    Final capability: Full cluster compromise, data theft, and persistence beyond per-tool or per-server admin intent.
+    Approval bypass: Each step (create a file, execute a benign-looking kubectl command) appears routine and within tool design; combined, they enable sweeping compromise.
+    Step 1: Use execute_bash to create, edit, or download malicious YAML manifests or Kubernetes scripts.
+    Step 2: Optionally, retrieve kubeconfig context or credentials if stored/accessible on the system.
+    Step 3: Invoke kubectl to apply the crafted manifest, exec into cluster pods, or alter deployments.
+    Step 4: Optionally, use execute_bash again to automate enumeration, exfiltration, or tool installation in the cluster.
+
+  [C2] Autonomous Supply Chain Compromise via Bash → ArgoCD — Critical
+    Final capability: Agent-driven, human-invisible production deployment of unreviewed code/config via legitimate CI/CD pipeline.
+    Approval bypass: Repo changes and ArgoCD sync requests appear routine; sequence allows bypassing review gates and direct cluster compromise.
+    Step 1: Use execute_bash to clone, alter, and push malicious code or manifest into a repository monitored by ArgoCD.
+    Step 2: Invoke argocd to force a sync (if not automatic), causing cluster to deploy agent-modified code.
+    Step 3: Optionally, use kubectl or istioctl to post-modify service behavior or escalate.
+
+  [C3] Stealth Service Surveillance via Bash → Istioctl — High
+    Final capability: Surreptitious exfiltration or surveillance of service-to-service cluster traffic.
+    Approval bypass: Bash scripting and manifest upload are daily ops tasks; malicious route/mirror config is unremarkable in isolation.
+    Step 1: Agent creates malicious Istio routing or mirroring config locally via execute_bash.
+    Step 2: Applies the config with istioctl to enable traffic capture/mirroring to attacker endpoints.
+    Step 3: Optionally, uses bash to clean up logs or script persistence.
+    Step 4: May combine with kubectl for pod-level actions.
+
+  GOVERNANCE BLIND SPOTS:
+    • Bash-executor is seen as isolated shell automation — not as a privileged ingress into critical production infra.
+    • Kubernetes admin tools are greenlit for infra automation, but their exposure to arbitrary scripts and file uploads is unseen in per-server governance.
+    • No per-tool policy can stop an agent from chaining a shell attack to a cluster action when both tools are in its composition context.
+
+  RECOMMENDED CONSTRAINTS:
+    • Bash-executor tools and Kubernetes cluster management tools must NOT be authorized for the same agent/session.
+    • Disallow access to both bash execution and kubectl/argocd/istioctl simultaneously.
+    • If both toolsets are essential, enforce gating: at least one step of human approval on chainable actions (e.g., ArgoCD sync, kubectl apply) after bash-executor use.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100716-COMPOSITION-kubernetes+bash-executo.json

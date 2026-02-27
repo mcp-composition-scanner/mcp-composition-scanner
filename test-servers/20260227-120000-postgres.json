@@ -1,0 +1,11 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "query",
+      "risk_summary": "Run a read-only SQL query against the PostgreSQL database. Returns query results as JSON.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Low",
+  "action": "ALLOW"
+}

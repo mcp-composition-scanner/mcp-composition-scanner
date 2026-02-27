@@ -1,0 +1,74 @@
+Collecting tools from result files...
+  ✓ postgres (from file): 1 tools extracted
+  ✓ sqlite (from file): 8 tools extracted
+
+▶ Running composition analysis on 9 tools from 2 servers...
+  Pairwise search space: 36 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    postgres, sqlite
+  Tools:      9
+  Pairs:      36
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 3
+
+  [S1] High [CROSS-SERVER]
+    Tools: query (postgres) ⊕ create_record (sqlite)
+    Emergent: Autonomous migration or duplication of data from PostgreSQL (read-only) into SQLite (write) database, enabling covert data copying between isolated systems.
+    Class: DataExfiltration
+    Environment: Agent maintains memory/context across tool invocations; no explicit egress/network restrictions between databases.
+    Gap: Per-server review would see only read-only access to PostgreSQL (presumed low risk) and local record creation in SQLite (presumed low risk). The cross-system data duplication is invisible unless both tools are viewed in context.
+
+  [S2] Medium [CROSS-SERVER]
+    Tools: query (postgres) ⊕ update_records (sqlite)
+    Emergent: Synchronized tampering or shadow-editing: Agent reads from Postgres, uses SQLite 'update' to overwrite or synchronize similar data in SQLite, supporting scenarios like masking changes to tracked data sets.
+    Class: SupplyChainModification
+    Environment: Agent access to both servers; agent memory/context tracks schemas/IDs.
+    Gap: Per-tool/server review would not see that data from Postgres (read-only) could be used to inform updates in SQLite, allowing subtle modification of application logic or audit trails.
+
+  [S3] High [CROSS-SERVER]
+    Tools: query (postgres) ⊕ delete_records (sqlite)
+    Emergent: Automated purging of records in SQLite based on content drawn from Postgres, enabling a model to use sensitive upstream data as the basis for targeted erasure operations.
+    Class: SupplyChainModification
+    Environment: Agent with memory/context ties results from Postgres to records in SQLite.
+    Gap: Neither server alone can perform coordinated purges based on external data; only possible in composition.
+
+  ⚠ ATTACK CHAINS: 3
+
+  [C1] Data Copy from PostgreSQL to SQLite — High
+    Final capability: Autonomous data migration (potential exfiltration) from a secure to a less secure environment.
+    Approval bypass: Each step looks benign: reading data is allowed from Postgres, writing new records is permitted in SQLite. The cross-system transfer is emergent only in composition.
+    Step 1: Use Postgres server's 'query' tool to select confidential records.
+    Step 2: Parse or transform result as needed for SQLite schema.
+    Step 3: Use SQLite server's 'create_record' to insert each record into local database.
+
+  [C2] Automated Data Tampering/Masking — Medium
+    Final capability: Autonomous cross-system shadow data modifications.
+    Approval bypass: Individually, 'query' and 'update' are not dangerous; risk only appears in how data from one is used to drive overwrites elsewhere.
+    Step 1: Run Postgres 'query' to obtain authoritative user/account/record information.
+    Step 2: Use SQLite 'update_records' to overwrite corresponding local records, inserting misleading or manipulated values.
+
+  [C3] Targeted Record Purge Using External Data — High
+    Final capability: Coordinated record deletion or cover-up actions across data boundaries.
+    Approval bypass: A delete by itself is allowable; targeting is only controversial in view of cross-source logic.
+    Step 1: Query Postgres for a list of specific targets (e.g., suspicious users or IDs).
+    Step 2: Automate record deletion in SQLite for those IDs using local 'delete_records'.
+
+  GOVERNANCE BLIND SPOTS:
+    • Postgres server tools are read-only, presumed safe when reviewed alone; SQLite tools allow writes/deletes, but with no external input appear low risk. The blind spot is that agent memory allows creative, cross-environment data flow.
+    • Authorization processes that approve tools based on their limited advertised function fail to surface compound use-case risk.
+    • Audit mechanisms that log each server separately will not capture cross-system semantics of autonomous exfiltration or tampering.
+
+  RECOMMENDED CONSTRAINTS:
+    • Enforce session- and workflow-level mutual exclusion: tools enabling writes (create_record, update_records, delete_records) to SQLite must NOT be used in the same agent session as reads (query) from PostgreSQL.
+    • If both databases must be accessible, force hard separation of agent memory/context between the environments, or require justification for data bridging.
+    • Implement cross-server action correlation monitoring: alert and review if agent attempts workflows that suggest ordered reading from one database and writing/deleting in another.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101338-COMPOSITION-postgres+sqlite.json

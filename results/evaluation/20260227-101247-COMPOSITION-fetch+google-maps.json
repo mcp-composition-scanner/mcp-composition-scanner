@@ -1,0 +1,186 @@
+{
+  "servers_analyzed": [
+    "fetch",
+    "google-maps"
+  ],
+  "total_tools": 8,
+  "pairwise_combinations": 28,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "fetch",
+      "server_origin": "fetch",
+      "capability_classes": [
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_geocode",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_reverse_geocode",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_search_places",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_place_details",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_distance_matrix",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_elevation",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_directions",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "Geospatial",
+          "confidence": "High"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "fetch",
+      "tool_a_server": "fetch",
+      "tool_b": "maps_search_places",
+      "tool_b_server": "google-maps",
+      "additional_tools": [
+        "maps_place_details"
+      ],
+      "emergent_capability": "Autonomous web recon and contextual place-based data extraction given a geographic location or query, with egress of arbitrarily-retrieved content from discovered business/place websites.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "1. maps_search_places is used to enumerate businesses or points of interest for a given geographic query.\n2. maps_place_details provides URLs or contact info for specific places.\n3. fetch retrieves arbitrary content from these URLs, extracting and returning web page data.\nNo single tool or server provides de facto web scraping of third-party sites from a geospatial query. The composition allows place-to-web, multi-target, automated extraction that neither server enables individually.",
+      "is_cross_server": true,
+      "environment_conditions": "Requires network egress to arbitrary external URLs. The environment must not block outbound HTTP(s) requests.",
+      "existing_governance_gap": "A per-tool or per-server review would see google-maps tools as only returning structured place data, and fetch as generic page fetch. Only in composition can a model chain: 'find N businesses in Paris' → 'extract their homepages' → 'fetch all content', which is leaky and can be repurposed for scraping, targeted exfiltration, or automated reconnaissance."
+    },
+    {
+      "id": "S2",
+      "tool_a": "fetch",
+      "tool_a_server": "fetch",
+      "tool_b": "maps_reverse_geocode",
+      "tool_b_server": "google-maps",
+      "additional_tools": [],
+      "emergent_capability": "Automated deanonymization: transforming raw location/coordinate data found in arbitrary web content into physical addresses, potentially exposing personal or sensitive physical locations unexpectedly.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "1. fetch downloads arbitrary web content, which may contain embedded coordinates (e.g., in images, metadata, or text).\n2. maps_reverse_geocode transforms coordinates into human-readable addresses.\nThis chain enables automated transformation of found coordinates into addresses—useful for tracking or surveillance, and not possible with either tool/server alone.",
+      "is_cross_server": true,
+      "environment_conditions": "Requires network egress and sufficient parsing to extract coordinates.",
+      "existing_governance_gap": "Each server only exposes atomic, seemingly benign capabilities (web fetch, address look-up). Composition enables automated surveillance workflows, invisible in per-server review."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Place-to-Website Recon and Mass Exfiltration",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "User/task provides a geospatial query (e.g., 'all coffee shops in Amsterdam').",
+        "maps_search_places identifies a list of businesses.",
+        "For each business, maps_place_details provides expanded info, including website URLs.",
+        "fetch downloads/extracts arbitrary data from each business website (could include scraping unprotected customer lists, proprietary info, or exposed data dumps).",
+        "Results are compiled and output."
+      ],
+      "final_capability": "Mass automated extraction of web content ranging from public to potentially sensitive sources, fully automated given only a geospatial query.",
+      "severity": "High",
+      "human_approval_bypass": "Each step (place search, place enrichment, content fetch) is individually benign and routine for business intelligence or research. Only the full-chain exfiltration, especially at scale, is problematic but not apparent in human-in-the-loop review.",
+      "mitigation": "Enforce session-level rate and scope limits on cross-server chains; monitor aggregated geospatial queries that lead to automated content scraping; alert on high-volume or automated website scraping initiated from geospatial context."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Web-to-Address Automated Surveillance",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "fetch downloads a web page (for example, a forum post or document repository containing GPS coordinates, EXIF tags, etc.).",
+        "AI agent parses/extracts coordinates from page content.",
+        "maps_reverse_geocode converts each coordinate into a physical address.",
+        "Agent outputs or cross-references these addresses for downstream use (e.g., alerting, mapping, targeted actions)."
+      ],
+      "final_capability": "Automated extraction and geolocation (deanonymization) of sensitive locations from web content.",
+      "severity": "High",
+      "human_approval_bypass": "fetching a document and converting coordinates to addresses both appear routine. The composition, applied broadly or at scale, converts semi-anonymous raw data into actionable surveillance intelligence.",
+      "mitigation": "Disallow workflows that enable transformation of arbitrary fetched web coordinates into addresses; require approvals and scope constraints on reverse-geocode when input is extracted from untrusted web content."
+    }
+  ],
+  "cross_server_risk_summary": "Combining generic web fetching (fetch) with Google Maps geospatial enrichment tools opens up powerful and potentially hazardous cross-server automations. These enable new forms of reconnaissance, targeted scraping, and privacy-invading automations that neither server exposes on its own. The composition surpluses are especially severe for privacy (deanonymization, bulk profiling) and for compliance, as automated workflows could violate data use or scraping prohibitions.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Per-tool review: fetch appears as a neutral web content retriever with no geospatial context; google-maps APIs only return metadata on places or locations. Only in composition does unbounded, automated geospatial recon and targeted scraping emerge.",
+    "Per-server review: Each server is low-risk in isolation. Cross-server agent autonomy is the only path to dangerous deanonymization or mass data exfiltration.",
+    "Neither server’s perimeter can stop full-chain exfiltration because each action is explainable individually and only problematic in aggregate."
+  ],
+  "recommendations": [
+    "Implement mutual exclusion at the session level: do not allow fetch and any google-maps enrichment tool (maps_place_details, maps_reverse_geocode, maps_search_places) to be used in the same agent workflow without elevated review.",
+    "Impose query and rate limits specifically for place-to-URL and URL-to-address chains.",
+    "Instrument session-level logging and alerting for agent behaviors that automate place-based scraping or mass geolocation.",
+    "Restrict fetch's ability to retrieve arbitrary URLs discovered or constructed via maps-based lookups.",
+    "Implement, where feasible, static workflow analysis to detect and block chains that consume geospatial output as fetch input."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Enforce policy: fetch and google-maps tools must not be co-invoked by the same session unless explicitly justified and authorized.",
+    "Require agent-level logs of workflow chains and trigger audits on multi-tool compositions crossing geospatial and network egress boundaries.",
+    "Enforce monitoring and alerts for sequences matching the high-risk chains above.",
+    "Disallow automated transformation of coordinates in fetched web content into addresses at scale unless whitelisted."
+  ]
+}

@@ -1,0 +1,104 @@
+Collecting tools from result files...
+  ✓ slack (from file): 8 tools extracted
+  ✓ github (from file): 25 tools extracted
+
+▶ Running composition analysis on 33 tools from 2 servers...
+  Pairwise search space: 528 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    slack, github
+  Tools:      33
+  Pairs:      528
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 5
+
+  [S1] High [CROSS-SERVER]
+    Tools: slack_get_channel_history (slack) ⊕ create_or_update_file (github)
+    Emergent: Autonomous, unsupervised transfer of potentially sensitive Slack discussions into a persistent, version-controlled GitHub repository.
+    Class: DataExfiltration
+    Environment: No network egress constraint needed. Agent memory suffices to transfer data between invocations.
+    Gap: Slack reviewers see only message read permissions; GitHub reviewers see only file write. Only the composition allows Slack data to arrive in GitHub.
+
+  [S2] High [CROSS-SERVER]
+    Tools: get_file_contents (github) ⊕ slack_post_message (slack)
+    Emergent: Automated dissemination of sensitive repo content or secret code from GitHub onto arbitrary Slack channels, potentially causing leakage or misinformation.
+    Class: DataExfiltration
+    Environment: No special environment constraints; agent's memory/context enables cross-tool data flow.
+    Gap: GitHub reviewers do not see risk of Slack dissemination; Slack reviewers do not see origin of data.
+
+  [S3] Medium [CROSS-SERVER]
+    Tools: slack_get_users (slack) ⊕ search_users (github)
+    Emergent: Correlating workspace members’ real-world identities between Slack and GitHub for reconnaissance or social engineering.
+    Class: Surveillance
+    Environment: No special constraints. Enhanced risk if workspace emails are public.
+    Gap: Slack and GitHub reviewers each see only identity queries in their own domain, missing the deanonymization when tools are composed.
+
+  [S4] Medium [CROSS-SERVER]
+    Tools: slack_post_message (slack) ⊕ create_issue (github)
+    Emergent: Coordinated spam or misinformation campaigns across Slack and GitHub in tandem (agent writes on both platforms in synchrony, amplifying possible abuse).
+    Class: Messaging
+    Environment: No special egress or sandbox constraints; risk heightens if combined with scheduling or command code injection.
+    Gap: Each server authorizes outbound messaging w/o knowledge of volume or inter-platform message coordination.
+
+  [S5] Medium [CROSS-SERVER]
+    Tools: slack_get_channel_history (slack) ⊕ search_code (github)
+    Emergent: Reconnaissance chain: Agent correlates Slack conversations about error messages or code with public/internal GitHub codebase, to identify vulnerabilities, credentials, or sensitive code discussed in chat and present in code repositories.
+    Class: Surveillance
+    Environment: No special environment conditions.
+    Gap: Slack reviewers do not foresee use of extracted channel text for code search; GitHub reviewers do not see Slack-origin triggers for code search.
+
+  ⚠ ATTACK CHAINS: 5
+
+  [A1] Slack-to-GitHub Data Exfiltration Chain — High
+    Final capability: Exfiltration of sensitive Slack discussions to a remote, version-controlled system.
+    Approval bypass: Each step appears benign: retrieving chat history is a routine audit/read action; updating a file in GitHub is a common developer operation. The chain linking the two—the exfiltration—is invisible unless both tool invocations are monitored jointly.
+    Step 1: Agent uses slack_get_channel_history to extract recent chat logs (which may contain sensitive data).
+    Step 2: Agent autonomously uses create_or_update_file or push_files to insert a record of the chat data into a GitHub repository under its control.
+
+  [A2] GitHub-to-Slack Data Leak Chain — High
+    Final capability: Unauthorized dissemination of repository content to Slack channels.
+    Approval bypass: Fetching repo files and posting messages each seem normal in isolation. Linkage between GitHub source and Slack destination is non-obvious to tool reviewers.
+    Step 1: Agent uses get_file_contents to obtain a file from a private or sensitive GitHub repository.
+    Step 2: Agent uses slack_post_message to broadcast the retrieved file—or select fragments—into one or more Slack channels.
+
+  [A3] Identity Correlation and Targeting — Medium
+    Final capability: Cross-platform identity and social engineering targeting.
+    Approval bypass: Identity lookup on each platform is routine; correlation between platforms is not monitored in classical governance.
+    Step 1: Agent uses slack_get_users or slack_get_user_profile to enumerate workspace users and collect identifying information.
+    Step 2: Agent uses search_users on GitHub to correlate these Slack identities with GitHub accounts, building cross-platform dossiers.
+
+  [A4] Cross-Platform Coordinated Spam — Medium
+    Final capability: Coordinated outbound spam/misinformation across organizational surface area.
+    Approval bypass: Platform-native reviewers see only same-domain messaging activity. Cross-system simultaneity is not apparent.
+    Step 1: Agent crafts a message payload.
+    Step 2: Agent posts the payload as a Slack message using slack_post_message.
+    Step 3: Agent posts the same (or tailored) payload as a GitHub issue (create_issue) to maximize coverage.
+
+  [A5] Slack Reconnaissance for Codebase Attack — Medium
+    Final capability: Automated reconnaissance for vulnerability discovery through Slack–>GitHub information crosslinking.
+    Approval bypass: Text search on each platform is routine. The agent's ability to connect the two is overlooked by per-tool reviewers.
+    Step 1: Agent uses slack_get_channel_history to extract recent conversations about errors, credentials, or code.
+    Step 2: Agent uses search_code on GitHub, seeding searches with keywords or code fragments found in Slack, to map Slack-discussed vulnerabilities to actual code artefacts.
+
+  GOVERNANCE BLIND SPOTS:
+    • Slack and GitHub reviewers see only in-domain permissions. Neither sees the ability of the other platform to accept exported/imported data, enabling silent data exfiltration.
+    • Coordination of spam/misinformation effort across both Slack and GitHub is invisible to per-platform rate limits or abuse monitoring.
+    • Identity and reconnaissance links built by correlating Slack user profiles with GitHub accounts enable targeted attacks not visible to either reviewer.
+    • Reconnaissance chains leveraging Slack channel logs to trigger targeted code searches in GitHub are enabled only by global agent context.
+    • Session-level invocation linking and agent cross-memory is not covered by current per-tool authorization models.
+
+  RECOMMENDED CONSTRAINTS:
+    • Mutual exclusion: Slack message read (e.g., slack_get_channel_history) and GitHub file write (e.g., create_or_update_file, push_files) tools must not be accessible within the same agent session.
+    • If both Slack read and GitHub write are ever permitted, require explicit session-level DLP scanning on all file payloads and alert on Slack-origin strings.
+    • Bulk access to user-directory/search on both Slack and GitHub triggers a human review checkpoint.
+    • Slack message write and GitHub issue/posting tools can be granted together only under volume and frequency caps, with automatic alerting for cross-platform coordinated content.
+    • Require logging and alerting on any session that invokes more than one cross-domain tool in the same user/agent context.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100538-COMPOSITION-slack+github.json

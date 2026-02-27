@@ -1,0 +1,745 @@
+{
+  "servers_analyzed": [
+    "puppeteer",
+    "redis",
+    "github"
+  ],
+  "total_tools": 51,
+  "pairwise_combinations": 1275,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "puppeteer_navigate",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_screenshot",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Surveillance",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_click",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_fill",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_select",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_hover",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_evaluate",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Execute",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_string",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_string",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "hash_set",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "hash_get",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "hash_delete",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_append",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_pop",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_range",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_add",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_remove",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "set_members",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "publish",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "subscribe",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "stream_add",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "stream_read",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "json_store",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "json_retrieve",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "json_manipulate",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "server_info",
+      "server_origin": "redis",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_or_update_file",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_repositories",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_repository",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_file_contents",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "push_files",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_issue",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_pull_request",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "fork_repository",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_branch",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_commits",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_issues",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_issue",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_issue_comment",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_code",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_issues",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_users",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_issue",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_pull_requests",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_pull_request_review",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "merge_pull_request",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request_files",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request_status",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_pull_request_branch",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "CloudInfra",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_pull_request_comments",
+      "server_origin": "github",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "puppeteer_evaluate",
+      "tool_a_server": "puppeteer",
+      "tool_b": "create_or_update_file",
+      "tool_b_server": "github",
+      "additional_tools": [],
+      "emergent_capability": "Remote code execution across web and codebase boundaries: Use puppeteer_evaluate to extract sensitive data or credentials from a browser session (including OAuth tokens, cookies) and then autonomously insert them into source code or configuration files in a GitHub repo using create_or_update_file.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "Critical",
+      "reasoning": "A model can use puppeteer_evaluate to run JavaScript, extract secrets from a web application, and then use create_or_update_file to write those secrets into a code/config file in a GitHub repo, effectively introducing a backdoor or leaking live credentials into supply chain artifacts.",
+      "is_cross_server": true,
+      "environment_conditions": "Web session is authenticated; GitHub tool has repo write permission; no sandbox on JS evaluate action.",
+      "existing_governance_gap": "Neither puppeteer nor github per-tool review exposes that code exfiltrated from an interactive browser automation environment will be written into production code in repos. Both tools are high-trust but do not individually enable this lateral movement."
+    },
+    {
+      "id": "S2",
+      "tool_a": "get_string",
+      "tool_a_server": "redis",
+      "tool_b": "puppeteer_evaluate",
+      "tool_b_server": "puppeteer",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous use of application secrets for browser session hijack: get_string retrieves secrets/credentials from redis (e.g., API tokens), then puppeteer_evaluate injects/uses these in a live web environment to access privileged/unintended web resources.",
+      "emergent_capability_class": "PrivilegeEscalation",
+      "severity": "High",
+      "reasoning": "A model can query Redis for stored tokens, then inject them via puppeteer_evaluate (e.g., by setting localStorage/cookies or making XHRs), allowing privilege escalation or session impersonation unknown to either server.",
+      "is_cross_server": true,
+      "environment_conditions": "Redis contains sensitive credentials; Puppeteer can freely evaluate JS and set browser context.",
+      "existing_governance_gap": "Per-tool review of get_string and puppeteer_evaluate does not surface that composing credential retrieval on one server with JS execution in another gives end-to-end unauthorized access to protected apps."
+    },
+    {
+      "id": "S3",
+      "tool_a": "puppeteer_screenshot",
+      "tool_a_server": "puppeteer",
+      "tool_b": "publish",
+      "tool_b_server": "redis",
+      "additional_tools": [],
+      "emergent_capability": "Exfiltration of sensitive web UI data via intermediated pub/sub: Take screenshots (potentially of sensitive admin interfaces), then transmit over Redis pub/sub to subscriber(s) for surreptitious surveillance.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "The model can chain puppeteer's screenshot with redis publish to extract graphical browser data to arbitrary channels (potentially bridging to other network-connected consumers). Stepwise, this looks like automation+internal messaging, but the composition enables silent monitoring/exfiltration.",
+      "is_cross_server": true,
+      "environment_conditions": "Redis and Puppeteer accessible from the same agent context; publish not restricted to internal channels.",
+      "existing_governance_gap": "No individual tool provides surveillance+exfiltration; only together do these make a covert surveillance pipeline."
+    },
+    {
+      "id": "S4",
+      "tool_a": "puppeteer_navigate",
+      "tool_a_server": "puppeteer",
+      "tool_b": "push_files",
+      "tool_b_server": "github",
+      "additional_tools": [
+        "get_string"
+      ],
+      "emergent_capability": "Automated acquisition and dissemination of newly observed web content: Navigate to URLs, extract page content (via evaluate, screenshot, or other means), store temporally in redis (with get_string/set_string), then push harvested content as files to a GitHub repo for public dissemination in real-time.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "Critical",
+      "reasoning": "The agent autonomously chains browser navigation and extraction with storage and code repo publishing, enabling undiscoverable and automated data exfiltration/dissemination of any browsed content.",
+      "is_cross_server": true,
+      "environment_conditions": "Browser can reach external/internal URLs; github repo is public or repo permissions permit sharing.",
+      "existing_governance_gap": "No individual tool or per-server check reveals that the output of browser automation is being routed to public code hosting."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "AC1",
+      "name": "Browser credential extraction and software supply chain poisoning",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "1. Use puppeteer_navigate to log into a web service with high-value credentials.",
+        "2. Use puppeteer_evaluate to run JavaScript retrieving session tokens or app secrets.",
+        "3. Use create_or_update_file (github) to insert secrets as plaintext within a code/config file in a target repository."
+      ],
+      "final_capability": "Unauthorized modification of supply chain artifacts with sensitive secrets (potential backdoor or data exposure).",
+      "severity": "Critical",
+      "human_approval_bypass": "Each step is consistent with intended use (testing web apps, updating repos); only in composition does risk emerge.",
+      "mitigation": "Apply session-level mutual exclusion constraints between codebase write operations and arbitrary browser JavaScript execution, and monitor for supply chain secret leakage."
+    },
+    {
+      "chain_id": "AC2",
+      "name": "Redis credential bridge for browser session hijack",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "1. Use get_string (redis) to retrieve stored authentication tokens.",
+        "2. Use puppeteer_evaluate to inject/use these tokens in a browser context.",
+        "3. Gain unauthorized access to user/admin sessions through browser automation."
+      ],
+      "final_capability": "Interactive privilege escalation via model-driven token propagation into browser sessions.",
+      "severity": "High",
+      "human_approval_bypass": "Credential retrieval and browser automation both appear benign and decoupled under per-server review.",
+      "mitigation": "Prohibit tools that retrieve credentials from being composed with browser JavaScript execution in the same agent session."
+    },
+    {
+      "chain_id": "AC3",
+      "name": "Covert screenshot surveillance exfiltration channel",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "1. Use puppeteer_screenshot to capture browser/page images.",
+        "2. Use publish (redis) to send screenshots to an internal/external subscriber.",
+        "3. Exfiltrate sensitive UI data beyond sanctioned output channels."
+      ],
+      "final_capability": "Remote graphical surveillance pipeline undetected by output constraints.",
+      "severity": "High",
+      "human_approval_bypass": "Screenshot and pub/sub operations are widely used and appear QA/test oriented; only in concert do they form an exfiltration channel.",
+      "mitigation": "Enforce content-type/output constraints and session monitoring for data flows between automation, storage, and network/messaging tools."
+    },
+    {
+      "chain_id": "AC4",
+      "name": "Autonomous data harvesting and dissemination",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "1. Use puppeteer_navigate (puppeteer) to browse and scrape arbitrary web pages.",
+        "2. Use get_string/set_string (redis) for temporary storage of extracted content.",
+        "3. Use push_files (github) to upload extracted data as files to a public repository."
+      ],
+      "final_capability": "Automated, stealthy web-to-GitHub exfiltration of arbitrary harvested web data.",
+      "severity": "Critical",
+      "human_approval_bypass": "Web automation, cache storage, and repo update are routine actions individually; the combination creates an exfiltration pipeline.",
+      "mitigation": "Audit for content provenance and output, require explanations for upload operations combining web-browsed data and repository publishing, and restrict chaining of these tool classes."
+    }
+  ],
+  "cross_server_risk_summary": "Critical composition risks arise from combining puppeteer, redis, and github tools. The risks are entirely invisible to per-server review: only the agentic reasoning model can chain browser automation, credential/data retrieval, and repository modification to create automated supply chain attacks, interactive session hijacking, surveillance, and covert exfiltration pipelines.",
+  "composition_risk_score": "Critical",
+  "governance_blind_spots": [
+    "Per-server governance cannot detect that secrets extracted during browser automation may be written into code repositories (supply chain pollution).",
+    "Credential retrieval from redis, when composed with browser JavaScript execution, enables live web session hijack with no local audit trail.",
+    "Screenshot exfiltration via internal messaging (pub/sub) combined with browser automation bypasses output controls visible to either server individually.",
+    "Automated browser navigation results are exfiltrated as code files using repo write tools, producing data-leak risk invisible to static repo monitoring."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion so no session allows both arbitrary browser code execution (puppeteer_evaluate) and repository write (github) capabilities.",
+    "Apply session-level provenance tracking to detect and halt flows in which data acquired from web automation is used in code uploads or configuration changes.",
+    "Tightly restrict or template the set of browser automation results that may be published to GitHub; require human review for code diffs that contain recently acquired browser data.",
+    "Disallow credential or secret retrieval tools (get_string, hash_get) from being invoked in same agent context/session as browser automation.",
+    "Monitor message content in redis pub/sub for binary/image payload signatures; restrict types allowed from automation outputs."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Mutual exclusion: Never allow browser JS execution (puppeteer_evaluate) and github write (create_or_update_file, push_files) in the same agent session.",
+    "Disallow the combination of redis credential retrieval (get_string, hash_get) and browser JS automation in the same session.",
+    "Session-level monitoring and provenance: Any attempt to push new files to GitHub must disclose the upstream data source; flag and block if browser-acquired data is detected.",
+    "Prohibit exfiltration chains where browser screenshots are published via redis channels outside an internal monitoring/alerting scope."
+  ]
+}

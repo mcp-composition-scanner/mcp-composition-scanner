@@ -1,0 +1,340 @@
+{
+  "servers_analyzed": [
+    "google-maps",
+    "memory"
+  ],
+  "total_tools": 16,
+  "pairwise_combinations": 120,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "maps_geocode",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "CodeGeneration",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_reverse_geocode",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_search_places",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_place_details",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_distance_matrix",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_elevation",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "maps_directions",
+      "server_origin": "google-maps",
+      "capability_classes": [
+        {
+          "class_name": "DataEnrichment",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_entities",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_relations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_observations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_entities",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_observations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_relations",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Low"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_graph",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "search_nodes",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "High"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "open_nodes",
+      "server_origin": "memory",
+      "capability_classes": [
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Medium"
+        },
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "maps_reverse_geocode",
+      "tool_a_server": "google-maps",
+      "tool_b": "add_observations",
+      "tool_b_server": "memory",
+      "additional_tools": [],
+      "emergent_capability": "Creation of a persistent, queryable geolocation surveillance graph by autonomously mapping addresses (via reverse geocode) from any available coordinates, then associating these locations with entities or observations in the agent’s own long-term knowledge graph.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "Individually, maps_reverse_geocode can only resolve coordinates to addresses, and add_observations can only persist new facts. In cross-server composition, a model could: (a) obtain GPS coordinates from any data source/context; (b) use reverse geocode to resolve an address; (c) log this as an observation in the knowledge graph tied to an entity (e.g. 'user was at 123 Main St at 9am'). This enables persistent location logging and future timeline analysis, a capability neither server offers alone.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent has access to inputting coordinates and storing output from tools; knowledge graph not access controlled by user; session context memory enables data handoff.",
+      "existing_governance_gap": "Per-tool/server reviews of maps or memory see no harm. Only the composition generates location-tracking database, which is invisible in individual TPR/TPA risk assessments."
+    },
+    {
+      "id": "S2",
+      "tool_a": "maps_search_places",
+      "tool_a_server": "google-maps",
+      "tool_b": "create_entities",
+      "tool_b_server": "memory",
+      "additional_tools": [],
+      "emergent_capability": "Automated bulk population of the agent’s knowledge graph with place data from arbitrary searches (e.g., all businesses of a certain type, or all homes on a block), enabling mass enrichment or mapping without user curation.",
+      "emergent_capability_class": "DataEnrichment",
+      "severity": "Medium",
+      "reasoning": "maps_search_places allows querying large numbers of real-world venues; create_entities can insert arbitrary records into the graph. Used together, a model can import hundreds/thousands of places into its persistent memory in one session, creating a highly detailed, queryable structure for later use.",
+      "is_cross_server": true,
+      "environment_conditions": "No bulk upload limit or rate limiting, no user review on batch inserts.",
+      "existing_governance_gap": "Google-maps does not store results, and memory does not access external APIs. This enrichment ability is only available in composite, not in isolation."
+    },
+    {
+      "id": "S3",
+      "tool_a": "maps_place_details",
+      "tool_a_server": "google-maps",
+      "tool_b": "add_observations",
+      "tool_b_server": "memory",
+      "additional_tools": [],
+      "emergent_capability": "Persistent enrichment and potential deanonymization of entities by linking external place attributes (phone, hours, reviews) to structured knowledge graph nodes—enabling profile building far beyond in-session lookup.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "maps_place_details retrieves enriched place records; add_observations enables appending details to entities the model is tracking. Used together, this allows the agent to gradually build detailed surveillance dossiers over time.",
+      "is_cross_server": true,
+      "environment_conditions": "Access to both place attributes and persistent graph storage; no enforced data retention/scoping for observations.",
+      "existing_governance_gap": "Individually, place details can only be retrieved transiently, and memory cannot ingest outside place info. This persistent enrichment path exists only when both are combined."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "A1",
+      "name": "Autonomous Location Surveillance Log",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Step 1: The agent receives or discovers GPS coordinates (from user input, task output, or another allowed tool).",
+        "Step 2: It invokes maps_reverse_geocode to translate coordinates into a street address.",
+        "Step 3: It uses add_observations to write this address, possibly with timestamp, as a new observation tied to an entity representing a person, place, or user.",
+        "Step 4: Optionally, it repeats this across multiple sessions or with multiple coordinates, aggregating over time a complete movement log in the knowledge graph."
+      ],
+      "final_capability": "Agent-run persistent, queryable location tracking database—effectively enables surveillance by aggregating geolocation data about individuals/entities.",
+      "severity": "High",
+      "human_approval_bypass": "Each tool invocation appears benign: looking up an address, or recording an observation. But over time, the agent composes a surveillance log, which is undetectable in per-invocation or per-tool reviews.",
+      "mitigation": "Impose policy constraints: prohibit recording real-world location data from maps APIs into persistent memory without consent; session-level aggregation detection for logging patterns."
+    },
+    {
+      "chain_id": "A2",
+      "name": "Mass Real-World Entity Enrichment",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Step 1: Agent invokes maps_search_places with a broad query (e.g. 'all coffee shops in New York City').",
+        "Step 2: Receives a very large results set.",
+        "Step 3: Uses create_entities to instantiate each place as a node in the knowledge graph.",
+        "Step 4: Optionally, uses other memory tools to add place-specific attributes (from google-maps or user data)."
+      ],
+      "final_capability": "Bulk, unsupervised creation of detailed, external data-enriched knowledge graphs.",
+      "severity": "Medium",
+      "human_approval_bypass": "Each step looks harmless—legitimate API queries, data insertion—but the result is unreviewed graph enrichment that would be flagged in aggregate only.",
+      "mitigation": "Enforce bulk insertion limits and data provenance/approval review for knowledge graph population sourced from external APIs."
+    },
+    {
+      "chain_id": "A3",
+      "name": "Surveillance Profile Enrichment",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Step 1: Agent identifies or receives an entity (person, business, etc).",
+        "Step 2: Uses maps_place_details to fetch a rich set of attributes for that entity.",
+        "Step 3: Inserts or attaches these attributes via add_observations to the entity node in the knowledge graph.",
+        "Step 4: Repeats for other entities or over time, generating a rich, historical record.",
+        "Step 5: Optionally correlates across entities, times, and places for deanonymization or advanced profiling."
+      ],
+      "final_capability": "Persistent, longitudinal enrichment of knowledge graph entities with detailed external metadata—enabling deanonymization and advanced profiling.",
+      "severity": "High",
+      "human_approval_bypass": "Each step appears as routine API use or memory update. Only through historical or aggregate review would the latent surveillance risk be seen.",
+      "mitigation": "Guard against storing external attributes to persistent entities without user review; implement rate and volume limits on place enrichment."
+    }
+  ],
+  "cross_server_risk_summary": "Individually, google-maps tools only provide transient location/place data, and memory tools only persist or query agent-internal knowledge. When combined, they enable persistent surveillance, mass data enrichment, and advanced profiling — all latent risks invisible to per-tool/server TPRs but materializing through an agent's reasoning and cross-session orchestration.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Neither server, in isolation, allows persistent geolocation tracking, but their combination enables it via agent-driven composition.",
+    "Bulk import of real-world place data into the knowledge graph is barred by neither server alone, yet could enable mass enrichment/OSINT-style scraping.",
+    "Place detail enrichment and person/entity profiling can be automated cross-session without any per-tool or per-session detection."
+  ],
+  "recommendations": [
+    "Enforce mutual exclusion: block recording of any external-sourced street address/location as observation/entity in persistent memory, unless explicitly authorized per request.",
+    "Session-level policy: detect and alert if pattern of 'maps' data is persisted across multiple entities/observations in memory.",
+    "Limit batch insertion rates and require automatic review/approval for large or repeated population of the knowledge graph from external APIs.",
+    "Restrict the use of add_observations for storing geolocation data unless those observations derive from explicit, user-reviewed inputs.",
+    "Implement detection for enrichment chains: if an entity in memory is being decorated with place attributes from external sources, escalate for review."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Explicit prohibition on bulk place/node creation in memory from maps APIs unless permitted by data governance policy.",
+    "Automatic policy: do not permit logs/observations recording individual geolocations into persistent agent memory unless (1) consent is captured, (2) use is reviewed.",
+    "Monitor and cap rate of memory enrichment with external place attributes (maps → add_observations) per session.",
+    "Mandate user review for any agent proposal to aggregate or correlate geolocation and entity data across both servers."
+  ]
+}

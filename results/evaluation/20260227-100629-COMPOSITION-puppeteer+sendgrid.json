@@ -1,0 +1,372 @@
+{
+  "servers_analyzed": [
+    "puppeteer",
+    "sendgrid"
+  ],
+  "total_tools": 19,
+  "pairwise_combinations": 171,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "puppeteer_navigate",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_screenshot",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Surveillance",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_click",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_fill",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_select",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_hover",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "puppeteer_evaluate",
+      "server_origin": "puppeteer",
+      "capability_classes": [
+        {
+          "class_name": "BrowserAutomation",
+          "confidence": "High"
+        },
+        {
+          "class_name": "Execute",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "add_contact",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_contacts",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "send_to_list",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "High"
+        },
+        {
+          "class_name": "NetworkEgress",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_templates",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_template",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_stats",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "validate_email",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Messaging",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_verified_senders",
+      "server_origin": "sendgrid",
+      "capability_classes": [
+        {
+          "class_name": "Authentication",
+          "confidence": "Medium"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "puppeteer_evaluate",
+      "tool_a_server": "puppeteer",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous exfiltration of arbitrary browser page data (e.g., sensitive information extracted/created in the browser) via high-reliability email channel.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "puppeteer_evaluate can execute arbitrary JavaScript to scrape or synthesize data from any visited web page; this data can then be submitted via send_email to any address, enabling unsupervised, reliable exfiltration of web content or credentials. Each server's tools alone lack both arbitrariness and outbound data transfer, but composed they enable browser->email pipeline.",
+      "is_cross_server": true,
+      "environment_conditions": "No egress filtering on SendGrid API; unrestricted use of both toolchains by agent; agent memory able to relay data between tool outputs.",
+      "existing_governance_gap": "Per-server review sees only browser automation (puppeteer) and legitimate messaging (sendgrid); neither appears capable of cross-domain exfiltration alone."
+    },
+    {
+      "id": "S2",
+      "tool_a": "puppeteer_navigate",
+      "tool_a_server": "puppeteer",
+      "tool_b": "send_to_list",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [
+        "list_contacts"
+      ],
+      "emergent_capability": "Automated spear-phishing/credential harvesting workflow: scrape phishing kit or credential form, then bulk-distribute crafted phishing email to real users from trusted domain.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "Critical",
+      "reasoning": "puppeteer_navigate and related tools can visit and interact with remote phishing pages, extracting forms or dynamic HTML payloads; sendgrid tools can then generate and deliver targeted phishing or credential-harvesting emails at scale, leveraging organization-trusted sending infrastructure to bypass spam filters.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent given both puppeteer and sendgrid toolchains; sendgrid account has non-restricted verified sender status.",
+      "existing_governance_gap": "Neither server exposes a full threat path alone (puppeteer is browser-only, sendgrid is messaging-only), but in composition, an agent can design and deploy harmful phishing campaigns programmatically."
+    },
+    {
+      "id": "S3",
+      "tool_a": "puppeteer_screenshot",
+      "tool_a_server": "puppeteer",
+      "tool_b": "send_email",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Silent screenshot of sensitive web session and exfiltration via email, bypassing endpoint DLP controls.",
+      "emergent_capability_class": "Surveillance",
+      "severity": "High",
+      "reasoning": "puppeteer_screenshot captures any in-browser session image; send_email transmits it outside the trusted environment. On-per-tool review, screenshotting does not imply data egress, and email does not imply capture of visuals.",
+      "is_cross_server": true,
+      "environment_conditions": "Both toolchains available, agent can transfer image payload between phases.",
+      "existing_governance_gap": "Per-server review assumes no channel from screenshot content to egress; only cross-server comp presents unsupervised outbound data movement."
+    },
+    {
+      "id": "S4",
+      "tool_a": "puppeteer_evaluate",
+      "tool_a_server": "puppeteer",
+      "tool_b": "add_contact",
+      "tool_b_server": "sendgrid",
+      "additional_tools": [],
+      "emergent_capability": "Harvesting and injecting external web data into internal/managed contact lists, facilitating supply chain poisoning or data poisoning against communication lists.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "Medium",
+      "reasoning": "Model can use puppeteer_evaluate to scrape web sources for bulk emails/names/fields and automatically add them to org comms via sendgrid's add_contact, possibly introducing malicious addresses or data into trusted CRMs.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent cross-tool memory buffer or auto data transformation; unrestricted access to both APIs.",
+      "existing_governance_gap": "Individual reviews see only scraping or contact management; only together do they create automated supply chain poisoning risk."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Automated Web Data Exfiltration via Email",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Agent navigates using puppeteer_navigate to target web page.",
+        "Agent executes puppeteer_evaluate to scrape sensitive content (e.g., page credentials, confidential data).",
+        "Agent assembles result as email body/attachment.",
+        "Agent invokes send_email to transmit the data to attacker-controlled address."
+      ],
+      "final_capability": "Arbitrary web session data extraction and exfiltration via enterprise email",
+      "severity": "High",
+      "human_approval_bypass": "Each tool invocation appears legitimate independently (browsing, sending email), but chained enable covert exfiltration.",
+      "mitigation": "Impose mutual exclusion on puppeteer_evaluate and send_email within a session; session-level monitoring to halt chains transferring browser data to messaging tools."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Autonomous Phishing Kit Harvest and Campaign Deployment",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Agent uses puppeteer_navigate and puppeteer_evaluate to visit phishing kit deployment on the open web.",
+        "Agent extracts phishing forms or fake login template.",
+        "Agent gathers list_contacts to enumerate recipient addresses.",
+        "Agent creates phishing email with the harvested web payload.",
+        "Agent uses send_to_list to bulk-distribute to internal/external contacts."
+      ],
+      "final_capability": "Fully automated, highly targeted, and trusted-domain spear phishing",
+      "severity": "Critical",
+      "human_approval_bypass": "Each API call appears isolated and purpose-appropriate; only in composition does the chain constitute a campaign.",
+      "mitigation": "Block co-authorization of browser automation tools with bulk email/sendgrid campaign tools; monitor for cross-tool payload transfer involving untrusted web content."
+    },
+    {
+      "chain_id": "C3",
+      "name": "Silent Screenshot Exfiltration",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Agent uses puppeteer_navigate to reach sensitive internal resource.",
+        "Agent invokes puppeteer_screenshot to capture screen.",
+        "Agent invokes send_email to transmit the screenshot externally."
+      ],
+      "final_capability": "Surreptitious visual surveillance and egress via email",
+      "severity": "High",
+      "human_approval_bypass": "Screenshotting and email sending tasks look non-threatening when viewed per-server.",
+      "mitigation": "Enforce mutual exclusion: puppeteer_screenshot and send_email must not be co-invoked; instrument session to block image payload delivery from browser to email."
+    },
+    {
+      "chain_id": "C4",
+      "name": "Contact List Poisoning from Web Harvest",
+      "composition_surpluses_used": [
+        "S4"
+      ],
+      "steps": [
+        "Agent scrapes public or shady web directories using puppeteer_evaluate.",
+        "Agent transforms scraped data into contact formats.",
+        "Agent invokes add_contact on sendgrid to poison contact lists."
+      ],
+      "final_capability": "Automated addition of malicious or bogus records into trusted distribution channels",
+      "severity": "Medium",
+      "human_approval_bypass": "Scraping web data and updating lists are benign in isolation; combined, risk is introduced.",
+      "mitigation": "Disallow cross-server data flows from browser automation to contact management; enable content verification or approval on new contact addition."
+    }
+  ],
+  "cross_server_risk_summary": "Several severe emergent capabilities materialize ONLY when a reasoning model combines browser automation (puppeteer) with programmatic messaging and contact management (sendgrid): autonomous web data exfiltration via email, unsupervised spear phishing campaigns, visual surveillance and exfiltration, and supply chain poisoning via contact list manipulation. Per-server governance cannot detect these because each server's tools are low-risk alone, but cross-server composition effectively creates new cross-domain egress and attack channels.",
+  "composition_risk_score": "Critical",
+  "governance_blind_spots": [
+    "Browser automation is considered safe in isolation (puppeteer) — it lacks egress capabilities.",
+    "SendGrid email and contact management functions, alone, cannot harvest or assemble malicious payloads — assumed safe under least privilege.",
+    "Joint approval review does not identify or block chained data flows, especially agent-driven flows using memory/context.",
+    "Each step appears to obey purpose limitation, so human-in-the-loop review fails to see the end-to-end risk."
+  ],
+  "recommendations": [
+    "Impose mutual exclusion constraints: prohibit co-authorization of browser automation (puppeteer tools) and messaging/egress tools (sendgrid send_email/send_to_list) in a single agent session.",
+    "Implement real-time session-level monitoring to detect data payload flowing from browser output to messaging/contact APIs.",
+    "Require explicit human approval for agent actions that cross between browser automation and SendGrid domains, with payload review.",
+    "Harden environment to block or alert on bulk contact creation where source is non-human input (i.e., flag automated imports).",
+    "Audit for agent memory or context flows bridging tool boundaries, not just immediate tool input/output.",
+    "Restrict sendgrid accounts with email-sending privileges to users/sessions without browser scraping privileges."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "puppeteer_evaluate, puppeteer_screenshot, and similar data-producing puppeteer tools must not be co-invoked with sendgrid messaging APIs (send_email, send_to_list) within same agent session.",
+    "Forbid cross-tool agent memory/context transfer from browser-extracted payloads to messaging or contact management invocations.",
+    "Require payload audit if browser-derived data is distributed via SendGrid senders.",
+    "Disallow add_contact via data sourced from external/browsed sites unless human-verified."
+  ]
+}

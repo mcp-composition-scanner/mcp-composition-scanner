@@ -1,0 +1,83 @@
+Collecting tools from result files...
+  ✓ git (from file): 12 tools extracted
+  ✓ sendgrid (from file): 12 tools extracted
+
+▶ Running composition analysis on 24 tools from 2 servers...
+  Pairwise search space: 276 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    git, sendgrid
+  Tools:      24
+  Pairs:      276
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 4
+
+  [S1] High [CROSS-SERVER]
+    Tools: git_diff (git) ⊕ send_email (sendgrid)
+    Emergent: Exfiltration of source code or source diffs from the local repository to arbitrary recipients via email.
+    Class: DataExfiltration
+    Environment: No network egress constraints on sendgrid API calls. Agent has access to both tool sets in same context.
+    Gap: Per-server review sees git tools as only interacting with local code, and sendgrid tools as sending benign emails. Combining them enables cross-domain data transfer invisible to isolated reviews.
+
+  [S2] High [CROSS-SERVER]
+    Tools: git_log (git) ⊕ send_email (sendgrid)
+    Emergent: Exfiltration of git history (metadata or full commit messages) via outbound email.
+    Class: DataExfiltration
+    Environment: No outbound policy on sendgrid use; agent memory can shuttle content between read and send steps.
+    Gap: Each tool/server only grants a read or messaging ability, but an agent can combine to pipe the output out undetected.
+
+  [S3] Critical [CROSS-SERVER]
+    Tools: git_show (git) ⊕ send_to_list (sendgrid)
+    Emergent: Bulk exfiltration of repository snapshot or specific file/version to arbitrary distribution lists.
+    Class: DataExfiltration
+    Environment: Agent able to access target contact lists on sendgrid; unconstrained outbound use.
+    Gap: Neither server provides bulk exfil natively, but together they enable undetectable, mass data leaks.
+
+  [S4] High [CROSS-SERVER]
+    Tools: git_diff_unstaged (git) ⊕ validate_email (sendgrid)
+    + send_email
+    Emergent: Automated spear phishing using recent, contextually-relevant code changes inside crafted emails to project members.
+    Class: Surveillance
+    Environment: Agent has memory/context to correlate file changes and valid email addresses.
+    Gap: Each server's tools are non-threatening alone, but the ability to combine privileged source and validated email targeting is novel.
+
+  ⚠ ATTACK CHAINS: 3
+
+  [AC1] Source Code Exfiltration via Email — High
+    Final capability: Automated, context-informed data exfiltration of source code diffs via external channel.
+    Approval bypass: Step 1 is just reading code with git_diff; Step 2 is just sending an email, each appearing innocuous, but their combined effect is exfiltration.
+    Step 1: 1. Use git_diff to read sensitive, recent code changes.
+    Step 2: 2. Use send_email to send the diff output to an arbitrary external email address.
+
+  [AC2] Bulk Commit History Leak — Critical
+    Final capability: Bulk exfiltration of project history to arbitrary recipients.
+    Approval bypass: Regular use of git_log and bulk sending both look normal; only their combination is malicious.
+    Step 1: 1. Use git_log to extract commit and history data.
+    Step 2: 2. Use send_to_list to broadcast extracted commit data to contact lists.
+
+  [AC3] Spear Phishing Preparation With Project Intel — High
+    Final capability: Automated, contextually accurate spear phishing enabled by combining project-specific knowledge with validated outbound delivery.
+    Approval bypass: Reading diffs and validating emails are individually useful, but together they enable micro-targeted phishing attacks.
+    Step 1: 1. Use git_diff_unstaged to read currently edited (but not yet committed) source changes.
+    Step 2: 2. Use validate_email to find valid emails of known contributors or suggest plausible targets.
+    Step 3: 3. Use send_email to send customized, context-relevant spear phishing emails using real code snippets.
+
+  GOVERNANCE BLIND SPOTS:
+    • Both 'git' and 'sendgrid' tools appear safe on their own: one only reads local files; the other only sends emails via a verified sender. In isolation, neither appears to have elevated risk.
+    • No per-server review would reveal that chaining 'git_diff' with 'send_email' (cross-server) enables code exfiltration.
+    • No single-tool scan would detect that combining 'git_show' or 'git_log' with bulk sendgrid actions enables mass data leakage.
+    • No server policy would catch that gathering code context (git) plus email validation empowers advanced targeting for phishing.
+
+  RECOMMENDED CONSTRAINTS:
+    • Block any workflow or session which uses a git 'read' tool (any of: git_diff, git_log, git_show, git_diff_unstaged, git_branch) and a sendgrid outbound 'send' tool (any of: send_email, send_to_list, add_contact, create_template) in the same task or session.
+    • Establish session memory boundary: do not allow transfer of content or summaries from git results into outbound messages without human authorization.
+    • Monitor and alert whenever sendgrid tools are triggered after git tools have been used.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101037-COMPOSITION-git+sendgrid.json

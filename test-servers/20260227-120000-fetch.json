@@ -1,0 +1,11 @@
+{
+  "tool_assessments": [
+    {
+      "tool_name": "fetch",
+      "risk_summary": "Fetches a URL from the internet and extracts its contents as markdown. Supports pagination, raw HTML mode, and respects robots.txt.",
+      "risk_level": "Low"
+    }
+  ],
+  "overall_risk_score": "Low",
+  "action": "ALLOW"
+}

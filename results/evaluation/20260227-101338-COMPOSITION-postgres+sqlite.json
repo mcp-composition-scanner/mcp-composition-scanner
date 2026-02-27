@@ -1,0 +1,231 @@
+{
+  "servers_analyzed": [
+    "postgres",
+    "sqlite"
+  ],
+  "total_tools": 9,
+  "pairwise_combinations": 36,
+  "tool_capability_vectors": [
+    {
+      "tool_name": "query",
+      "server_origin": "postgres",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "ReadFiles",
+          "confidence": "Low"
+        }
+      ]
+    },
+    {
+      "tool_name": "db_info",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "list_tables",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "get_table_schema",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "create_record",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "read_records",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    },
+    {
+      "tool_name": "update_records",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "delete_records",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        },
+        {
+          "class_name": "WriteFiles",
+          "confidence": "Medium"
+        }
+      ]
+    },
+    {
+      "tool_name": "query",
+      "server_origin": "sqlite",
+      "capability_classes": [
+        {
+          "class_name": "DatabaseAccess",
+          "confidence": "High"
+        }
+      ]
+    }
+  ],
+  "composition_surpluses": [
+    {
+      "id": "S1",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "create_record",
+      "tool_b_server": "sqlite",
+      "additional_tools": [],
+      "emergent_capability": "Autonomous migration or duplication of data from PostgreSQL (read-only) into SQLite (write) database, enabling covert data copying between isolated systems.",
+      "emergent_capability_class": "DataExfiltration",
+      "severity": "High",
+      "reasoning": "Postgres 'query' provides read-only access to sensitive data, while SQLite's 'create_record' allows writing arbitrary new records. A reasoning model could retrieve data from the Postgres database and autonomously insert it record-by-record into the SQLite database, even if each server appears isolated. Neither server alone is capable of cross-database transfer, but together, they enable exfiltration via agent memory/context.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent maintains memory/context across tool invocations; no explicit egress/network restrictions between databases.",
+      "existing_governance_gap": "Per-server review would see only read-only access to PostgreSQL (presumed low risk) and local record creation in SQLite (presumed low risk). The cross-system data duplication is invisible unless both tools are viewed in context."
+    },
+    {
+      "id": "S2",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "update_records",
+      "tool_b_server": "sqlite",
+      "additional_tools": [],
+      "emergent_capability": "Synchronized tampering or shadow-editing: Agent reads from Postgres, uses SQLite 'update' to overwrite or synchronize similar data in SQLite, supporting scenarios like masking changes to tracked data sets.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "Medium",
+      "reasoning": "A chain of Postgres 'query' → SQLite 'update_records' allows the model to treat Postgres as canonical and try to keep or adjust SQLite contents accordingly. This enables the agent to propagate or mask certain changes in a local SQLite shadow/copy, even if it's not raw exfiltration.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent access to both servers; agent memory/context tracks schemas/IDs.",
+      "existing_governance_gap": "Per-tool/server review would not see that data from Postgres (read-only) could be used to inform updates in SQLite, allowing subtle modification of application logic or audit trails."
+    },
+    {
+      "id": "S3",
+      "tool_a": "query",
+      "tool_a_server": "postgres",
+      "tool_b": "delete_records",
+      "tool_b_server": "sqlite",
+      "additional_tools": [],
+      "emergent_capability": "Automated purging of records in SQLite based on content drawn from Postgres, enabling a model to use sensitive upstream data as the basis for targeted erasure operations.",
+      "emergent_capability_class": "SupplyChainModification",
+      "severity": "High",
+      "reasoning": "By combining 'query' (Postgres) to select sensitive identifiers and then using 'delete_records' (SQLite) to maliciously erase corresponding records, an agent could propagate impact from one environment to another, e.g., deleting audit trails or user information.",
+      "is_cross_server": true,
+      "environment_conditions": "Agent with memory/context ties results from Postgres to records in SQLite.",
+      "existing_governance_gap": "Neither server alone can perform coordinated purges based on external data; only possible in composition."
+    }
+  ],
+  "attack_chains": [
+    {
+      "chain_id": "C1",
+      "name": "Data Copy from PostgreSQL to SQLite",
+      "composition_surpluses_used": [
+        "S1"
+      ],
+      "steps": [
+        "Use Postgres server's 'query' tool to select confidential records.",
+        "Parse or transform result as needed for SQLite schema.",
+        "Use SQLite server's 'create_record' to insert each record into local database."
+      ],
+      "final_capability": "Autonomous data migration (potential exfiltration) from a secure to a less secure environment.",
+      "severity": "High",
+      "human_approval_bypass": "Each step looks benign: reading data is allowed from Postgres, writing new records is permitted in SQLite. The cross-system transfer is emergent only in composition.",
+      "mitigation": "Enforce session-level mutual exclusion on read/write database actions across servers, or implement agent action tracing to block chained data transfer."
+    },
+    {
+      "chain_id": "C2",
+      "name": "Automated Data Tampering/Masking",
+      "composition_surpluses_used": [
+        "S2"
+      ],
+      "steps": [
+        "Run Postgres 'query' to obtain authoritative user/account/record information.",
+        "Use SQLite 'update_records' to overwrite corresponding local records, inserting misleading or manipulated values."
+      ],
+      "final_capability": "Autonomous cross-system shadow data modifications.",
+      "severity": "Medium",
+      "human_approval_bypass": "Individually, 'query' and 'update' are not dangerous; risk only appears in how data from one is used to drive overwrites elsewhere.",
+      "mitigation": "Detect and prevent session-level use of update/create/delete actions in SQLite when preceded by sensitive queries on external databases in the same workflow."
+    },
+    {
+      "chain_id": "C3",
+      "name": "Targeted Record Purge Using External Data",
+      "composition_surpluses_used": [
+        "S3"
+      ],
+      "steps": [
+        "Query Postgres for a list of specific targets (e.g., suspicious users or IDs).",
+        "Automate record deletion in SQLite for those IDs using local 'delete_records'."
+      ],
+      "final_capability": "Coordinated record deletion or cover-up actions across data boundaries.",
+      "severity": "High",
+      "human_approval_bypass": "A delete by itself is allowable; targeting is only controversial in view of cross-source logic.",
+      "mitigation": "Session-level correlation detection: prevent delete actions on SQLite when immediately following bulk queries on external sensitive sources."
+    }
+  ],
+  "cross_server_risk_summary": "The combination of read-only access to a secure (Postgres) database and write/delete access to a separate (SQLite) database empowers a frontier model to autonomously synthesize data exfiltration, tampering, and purging chains that individually appear safe. These attack paths are completely missed by per-tool or per-server review; only in composition does risk materialize.",
+  "composition_risk_score": "High",
+  "governance_blind_spots": [
+    "Postgres server tools are read-only, presumed safe when reviewed alone; SQLite tools allow writes/deletes, but with no external input appear low risk. The blind spot is that agent memory allows creative, cross-environment data flow.",
+    "Authorization processes that approve tools based on their limited advertised function fail to surface compound use-case risk.",
+    "Audit mechanisms that log each server separately will not capture cross-system semantics of autonomous exfiltration or tampering."
+  ],
+  "recommendations": [
+    "Apply mutual exclusion: Do NOT allow session-level co-use of read actions on Postgres and write/delete actions on SQLite within a single agent context.",
+    "Implement session-level capability tracking, alerting when database content is read from one source and immediately written to another.",
+    "Flag/Block multi-environment database access in the same task unless explicitly justified and monitored.",
+    "Consider introducing workflow-level human approval only when cross-server data flow is detected.",
+    "Audit agent memory/context for suspected data transfer between heterogeneous database endpoints."
+  ],
+  "action": "ALLOW_WITH_CONSTRAINTS",
+  "constraints": [
+    "Enforce session- and workflow-level mutual exclusion: tools enabling writes (create_record, update_records, delete_records) to SQLite must NOT be used in the same agent session as reads (query) from PostgreSQL.",
+    "If both databases must be accessible, force hard separation of agent memory/context between the environments, or require justification for data bridging.",
+    "Implement cross-server action correlation monitoring: alert and review if agent attempts workflows that suggest ordered reading from one database and writing/deleting in another."
+  ]
+}

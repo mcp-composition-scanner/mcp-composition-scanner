@@ -1,0 +1,86 @@
+Collecting tools from result files...
+  ✓ filesystem (from file): 12 tools extracted
+  ✓ fetch (from file): 1 tools extracted
+
+▶ Running composition analysis on 13 tools from 2 servers...
+  Pairwise search space: 78 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    filesystem, fetch
+  Tools:      13
+  Pairs:      78
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 5
+
+  [S1] High [CROSS-SERVER]
+    Tools: read_text_file (filesystem) ⊕ fetch (fetch)
+    Emergent: Read local sensitive files and exfiltrate contents to arbitrary external endpoints.
+    Class: DataExfiltration
+    Environment: No egress filtering; fetch can access arbitrary URLs; local file system contains sensitive or confidential data.
+    Gap: A per-server or per-tool review sees only local file reads (filesystem) and safe web fetching (fetch), but combining allows sensitive data egress.
+
+  [S2] Critical [CROSS-SERVER]
+    Tools: read_multiple_files (filesystem) ⊕ fetch (fetch)
+    Emergent: Bulk remote sweep and exfiltration of large numbers of files.
+    Class: DataExfiltration
+    Environment: No egress filtering; fetch allows transmitting arbitrary content.
+    Gap: Reviewers see only local file reads and safe web fetches, miss aggregate risk: model can pipeline bulk file reads into fetch calls.
+
+  [S3] High [CROSS-SERVER]
+    Tools: search_files (filesystem) ⊕ fetch (fetch)
+    + read_text_file
+    Emergent: Targeted exfiltration of discovered file types (e.g., all SSH keys, config files).
+    Class: DataExfiltration
+    Environment: No egress filtering; fetch supports arbitrary URLs or webhooks.
+    Gap: Patterned search across filesystem is innocuous, fetch calls are innocuous, but together enable highly-targeted data exfiltration with fine-tuned precision.
+
+  [S4] Medium [CROSS-SERVER]
+    Tools: get_file_info (filesystem) ⊕ fetch (fetch)
+    + read_text_file
+    Emergent: Profiling and reporting sensitive metadata externally (file structure, presence, modification times).
+    Class: DataExfiltration
+    Environment: No egress filtering; fetch allowed to transmit arbitrary payloads.
+    Gap: Local file/directory inspection appears safe, fetch for web access appears safe—composition enables leaking a map of sensitive assets.
+
+  [S5] High [CROSS-SERVER]
+    Tools: write_file (filesystem) ⊕ fetch (fetch)
+    Emergent: Automated backdoor or implant delivery from external sources directly to local filesystem.
+    Class: SupplyChainModification
+    Environment: fetch can retrieve from untrusted/internet sources; filesystem write access not restricted.
+    Gap: Each permission (fetch, write_file) seems benign; their composition enables code drops with supply-chain implications. Per-tool consent cannot foresee this chain.
+
+  ⚠ ATTACK CHAINS: 2
+
+  [AC1] Sensitive file exfiltration to Internet — Critical
+    Final capability: Autonomous, large-scale exfiltration of sensitive internal data to attacker-controlled endpoints.
+    Approval bypass: Each file read or fetch appears as an innocuous local or web operation. Only the chain—reading then exfiltrating—constitutes data loss.
+    Step 1: Use read_multiple_files and/or search_files to enumerate and extract local sensitive files.
+    Step 2: For each discovered file, read contents using read_text_file.
+    Step 3: For each file/content, invoke fetch with an attacker-controlled URL, embedding or POSTing the content.
+
+  [AC2] Remote payload delivery and write — High
+    Final capability: Autonomous delivery of malicious code or backdoor from uncontrolled sources into the local system.
+    Approval bypass: Downloading public web content and writing files look like expected operations for these tools in isolation.
+    Step 1: Model invokes fetch on an arbitrary external source to retrieve a file (e.g., script, binary, config).
+    Step 2: Contents are provided to write_file or edit_file to deposit them in the local filesystem, creating or substituting files.
+    Step 3: Potential attacker gains code execution on the environment via further subversion.
+
+  GOVERNANCE BLIND SPOTS:
+    • Per-server review considers filesystem tools to be local-only and safe for internal automation, and fetch to be safe for internet content retrieval, but cannot see the exfiltration vector that emerges when both can be used in one session.
+    • Bulk or targeted exfiltration via search and aggregation is invisible to reviewers approving each tool individually.
+    • Fetching and writing hostile code for supply-chain insertion is invisible to fetch or write_file review in isolation.
+
+  RECOMMENDED CONSTRAINTS:
+    • Mutual exclusion policy: filesystem read/write and fetch tool must not be co-invoked in the same agent session.
+    • If both toolsets must be enabled, implement a quarantine or content-inspection step between read/write and any fetch operation in the same session.
+    • Restrict fetch tool to GET-only and to a whitelist of domains.
+    • Flag/block any fetch invocation where request payload or URL is constructed from recently-read local file contents.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100433-COMPOSITION-filesystem+fetch.json

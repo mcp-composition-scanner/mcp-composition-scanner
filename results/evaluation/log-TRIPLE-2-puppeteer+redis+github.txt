@@ -1,0 +1,94 @@
+Collecting tools from result files...
+  ✓ puppeteer (from file): 7 tools extracted
+  ✓ redis (from file): 19 tools extracted
+  ✓ github (from file): 25 tools extracted
+
+▶ Running composition analysis on 51 tools from 3 servers...
+  Pairwise search space: 1275 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    puppeteer, redis, github
+  Tools:      51
+  Pairs:      1275
+  Risk Score: Critical
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 4
+
+  [S1] Critical [CROSS-SERVER]
+    Tools: puppeteer_evaluate (puppeteer) ⊕ create_or_update_file (github)
+    Emergent: Remote code execution across web and codebase boundaries: Use puppeteer_evaluate to extract sensitive data or credentials from a browser session (including OAuth tokens, cookies) and then autonomously insert them into source code or configuration files in a GitHub repo using create_or_update_file.
+    Class: SupplyChainModification
+    Environment: Web session is authenticated; GitHub tool has repo write permission; no sandbox on JS evaluate action.
+    Gap: Neither puppeteer nor github per-tool review exposes that code exfiltrated from an interactive browser automation environment will be written into production code in repos. Both tools are high-trust but do not individually enable this lateral movement.
+
+  [S2] High [CROSS-SERVER]
+    Tools: get_string (redis) ⊕ puppeteer_evaluate (puppeteer)
+    Emergent: Autonomous use of application secrets for browser session hijack: get_string retrieves secrets/credentials from redis (e.g., API tokens), then puppeteer_evaluate injects/uses these in a live web environment to access privileged/unintended web resources.
+    Class: PrivilegeEscalation
+    Environment: Redis contains sensitive credentials; Puppeteer can freely evaluate JS and set browser context.
+    Gap: Per-tool review of get_string and puppeteer_evaluate does not surface that composing credential retrieval on one server with JS execution in another gives end-to-end unauthorized access to protected apps.
+
+  [S3] High [CROSS-SERVER]
+    Tools: puppeteer_screenshot (puppeteer) ⊕ publish (redis)
+    Emergent: Exfiltration of sensitive web UI data via intermediated pub/sub: Take screenshots (potentially of sensitive admin interfaces), then transmit over Redis pub/sub to subscriber(s) for surreptitious surveillance.
+    Class: Surveillance
+    Environment: Redis and Puppeteer accessible from the same agent context; publish not restricted to internal channels.
+    Gap: No individual tool provides surveillance+exfiltration; only together do these make a covert surveillance pipeline.
+
+  [S4] Critical [CROSS-SERVER]
+    Tools: puppeteer_navigate (puppeteer) ⊕ push_files (github)
+    + get_string
+    Emergent: Automated acquisition and dissemination of newly observed web content: Navigate to URLs, extract page content (via evaluate, screenshot, or other means), store temporally in redis (with get_string/set_string), then push harvested content as files to a GitHub repo for public dissemination in real-time.
+    Class: DataExfiltration
+    Environment: Browser can reach external/internal URLs; github repo is public or repo permissions permit sharing.
+    Gap: No individual tool or per-server check reveals that the output of browser automation is being routed to public code hosting.
+
+  ⚠ ATTACK CHAINS: 4
+
+  [AC1] Browser credential extraction and software supply chain poisoning — Critical
+    Final capability: Unauthorized modification of supply chain artifacts with sensitive secrets (potential backdoor or data exposure).
+    Approval bypass: Each step is consistent with intended use (testing web apps, updating repos); only in composition does risk emerge.
+    Step 1: 1. Use puppeteer_navigate to log into a web service with high-value credentials.
+    Step 2: 2. Use puppeteer_evaluate to run JavaScript retrieving session tokens or app secrets.
+    Step 3: 3. Use create_or_update_file (github) to insert secrets as plaintext within a code/config file in a target repository.
+
+  [AC2] Redis credential bridge for browser session hijack — High
+    Final capability: Interactive privilege escalation via model-driven token propagation into browser sessions.
+    Approval bypass: Credential retrieval and browser automation both appear benign and decoupled under per-server review.
+    Step 1: 1. Use get_string (redis) to retrieve stored authentication tokens.
+    Step 2: 2. Use puppeteer_evaluate to inject/use these tokens in a browser context.
+    Step 3: 3. Gain unauthorized access to user/admin sessions through browser automation.
+
+  [AC3] Covert screenshot surveillance exfiltration channel — High
+    Final capability: Remote graphical surveillance pipeline undetected by output constraints.
+    Approval bypass: Screenshot and pub/sub operations are widely used and appear QA/test oriented; only in concert do they form an exfiltration channel.
+    Step 1: 1. Use puppeteer_screenshot to capture browser/page images.
+    Step 2: 2. Use publish (redis) to send screenshots to an internal/external subscriber.
+    Step 3: 3. Exfiltrate sensitive UI data beyond sanctioned output channels.
+
+  [AC4] Autonomous data harvesting and dissemination — Critical
+    Final capability: Automated, stealthy web-to-GitHub exfiltration of arbitrary harvested web data.
+    Approval bypass: Web automation, cache storage, and repo update are routine actions individually; the combination creates an exfiltration pipeline.
+    Step 1: 1. Use puppeteer_navigate (puppeteer) to browse and scrape arbitrary web pages.
+    Step 2: 2. Use get_string/set_string (redis) for temporary storage of extracted content.
+    Step 3: 3. Use push_files (github) to upload extracted data as files to a public repository.
+
+  GOVERNANCE BLIND SPOTS:
+    • Per-server governance cannot detect that secrets extracted during browser automation may be written into code repositories (supply chain pollution).
+    • Credential retrieval from redis, when composed with browser JavaScript execution, enables live web session hijack with no local audit trail.
+    • Screenshot exfiltration via internal messaging (pub/sub) combined with browser automation bypasses output controls visible to either server individually.
+    • Automated browser navigation results are exfiltrated as code files using repo write tools, producing data-leak risk invisible to static repo monitoring.
+
+  RECOMMENDED CONSTRAINTS:
+    • Mutual exclusion: Never allow browser JS execution (puppeteer_evaluate) and github write (create_or_update_file, push_files) in the same agent session.
+    • Disallow the combination of redis credential retrieval (get_string, hash_get) and browser JS automation in the same session.
+    • Session-level monitoring and provenance: Any attempt to push new files to GitHub must disclose the upstream data source; flag and block if browser-acquired data is detected.
+    • Prohibit exfiltration chains where browser screenshots are published via redis channels outside an internal monitoring/alerting scope.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-101602-COMPOSITION-puppeteer+redis+github.json

@@ -1,0 +1,64 @@
+Collecting tools from result files...
+  ✓ postgres (from file): 1 tools extracted
+  ✓ sendgrid (from file): 12 tools extracted
+
+▶ Running composition analysis on 13 tools from 2 servers...
+  Pairwise search space: 78 combinations
+
+══════════════════════════════════════════════════════════════════════
+  COMPOSITION ANALYSIS RESULTS
+══════════════════════════════════════════════════════════════════════
+  Servers:    postgres, sendgrid
+  Tools:      13
+  Pairs:      78
+  Risk Score: High
+  Action:     ALLOW_WITH_CONSTRAINTS
+──────────────────────────────────────────────────────────────────────
+
+  ⚠ COMPOSITION SURPLUSES FOUND: 2
+
+  [S1] High [CROSS-SERVER]
+    Tools: query (postgres) ⊕ send_email (sendgrid)
+    Emergent: Exfiltrate arbitrary database query results to external email recipients—including unauthorized parties outside the organization—entirely via agent-automated workflow.
+    Class: DataExfiltration
+    Environment: No restrictions on where sendgrid emails can be delivered; agent permitted to use both tools in the same workflow/session; no DLP or egress filtering on email content.
+    Gap: Per-server authorization classifies 'query' as read-only (safe) and 'send_email' as internal-messaging (safe); no per-tool analysis detects that, when cross-authorized, these enable full database exfiltration. Reviewers on each server would not see workflow context.
+
+  [S2] Medium [CROSS-SERVER]
+    Tools: query (postgres) ⊕ add_contact (sendgrid)
+    + send_email
+    Emergent: Harvest and import potentially confidential or proprietary email addresses or contact information from database into the SendGrid contact list for subsequent bulk or targeted messaging.
+    Class: Surveillance
+    Environment: No constraints on what data can be read from postgres; agent allowed to invoke contact creation programmatically.
+    Gap: Database access tool is reviewed for reporting, not for exporting user identities; the SendGrid contact tool is for opt-in bulk mail. Chaining allows for surreptitious DIY email list building, invisible to either team.
+
+  ⚠ ATTACK CHAINS: 2
+
+  [C1] Database Exfiltration via Outbound Email — High
+    Final capability: Unauthorized mass or targeted exfiltration of data from postgres to external entities through sendgrid.
+    Approval bypass: Each step individually appears benign: reading database (common analytics/reporting need), then sending email (routine business comms). Human approvers will not connect that the email content is a complete data export.
+    Step 1: Approve agent to query table(s) in postgres for sensitive records (customer data, credentials, proprietary information).
+    Step 2: Agent receives and structures the results as JSON.
+    Step 3: Agent formats or chunks content as needed and calls sendgrid's 'send_email' or 'send_to_list' to transmit results to an attacker-controlled or external address.
+
+  [C2] Harvesting Internal Contacts for Spam/Spearphishing — Medium
+    Final capability: Unapproved import of internal/external contacts into bulk messaging platform for potential spam or social engineering.
+    Approval bypass: Adding contacts individually, querying a database for emails, and bulk messaging can each look legitimate in isolation.
+    Step 1: Approve agent to query for user/customer records in postgres.
+    Step 2: Agent extracts email addresses from results.
+    Step 3: Agent calls sendgrid's 'add_contact' to populate SendGrid address book with harvested emails.
+    Step 4: Optionally, agent crafts targeted messages and delivers them to these addresses using sendgrid's 'send_email' or 'send_to_list'.
+
+  GOVERNANCE BLIND SPOTS:
+    • Neither the postgres tool (read-only queries) nor the sendgrid tools (messaging, contact operations) appear dangerous alone, but together they allow automated, agent-driven theft of database contents via outbound email.
+    • No individual tool exposes bulk contact harvesting or mass messaging of extracted (possibly private or unapproved) contact lists—only the combination crosses this line.
+    • Human-in-the-loop approval focused on isolated tool usage will miss the emergent cross-server attack chains.
+
+  RECOMMENDED CONSTRAINTS:
+    • In the same agent session, do not allow both data extraction from postgres ('query') and cross-domain message sending/imports in sendgrid ('send_email', 'send_to_list', 'add_contact'). Session-level mutual exclusion must be enforced.
+    • All agent-sent emails through sendgrid must pass DLP/content inspection for structured data leaks.
+    • Flag and review all workflow sequences where new contacts in sendgrid originate from recently queried DB records.
+
+══════════════════════════════════════════════════════════════════════
+
+  Results saved to: results/evaluation/20260227-100356-COMPOSITION-postgres+sendgrid.json
